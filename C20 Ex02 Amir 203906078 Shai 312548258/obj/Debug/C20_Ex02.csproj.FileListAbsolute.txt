@@ -14,3 +14,4 @@ C:\Users\amirb\source\repos\DotNet.Ex02\C20 Ex02 Amir 203906078 Shai 312548258\b
 C:\Users\amirb\source\repos\DotNet.Ex02\C20 Ex02 Amir 203906078 Shai 312548258\bin\Debug\C20 Ex02 Amir 203906078 Shai 312548258.pdb
 C:\Users\amirb\source\repos\DotNet.Ex02\C20 Ex02 Amir 203906078 Shai 312548258\bin\Debug\Ex02.ConsoleUtils.dll
 C:\Users\amirb\source\repos\DotNet.Ex02\C20 Ex02 Amir 203906078 Shai 312548258\obj\Debug\C20_Ex02.csproj.CopyComplete
+C:\Users\shaio\source\repos\DotNet.Ex02\C20 Ex02 Amir 203906078 Shai 312548258\obj\Debug\C20_Ex02.csproj.CopyComplete

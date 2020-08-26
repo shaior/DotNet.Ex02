@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C20_Ex02_Amir_203906078_Shai_312548258;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,37 +10,6 @@ namespace C20_Ex02
 {
     class Program
     {
-
-        public static string GetUserName()
-        {
-            Console.WriteLine("Welcome to The Checkers Game!");
-            string userName = string.Empty;
-            bool checkUserName = true;
-
-            while (checkUserName)
-            {
-                Console.WriteLine("Please Enter your Name (without spaces): ");
-                userName = Console.ReadLine();
-
-                if (userName.Length > 20)
-                {
-                    Console.WriteLine("The name provided is longer than 20 characters. Try again");
-                    continue;
-                }
-                else if (userName.Contains(" "))
-                {
-                    Console.WriteLine("Please provide a string without spaces. Try again.");
-                    continue;
-                }
-                else
-                {
-                    checkUserName = false;
-                }
-            }
-
-            return userName;
-        }
-
         public static int GetBoardSizeFromUser()
         {
             string boardSizeFromUser = string.Empty;
@@ -60,21 +30,84 @@ namespace C20_Ex02
 
                 boardSizeInputCheck = false;
             }
-
             return integerBoardSize;
+        }
+
+        public static int CheckHowManyPlayers()
+        {
+            bool checkAgainHowManyPlayers = true;
+            string resultGamePartner = string.Empty;
+            while (checkAgainHowManyPlayers)
+            {
+                string vsFriendOrVsComputer = string.Format("Are you going to play against a friend, or against the computer?" + Environment.NewLine +
+               "against a friend - type 1" + Environment.NewLine +
+               "against the computer - type 0" + Environment.NewLine);
+                Console.WriteLine(vsFriendOrVsComputer);
+                resultGamePartner = Console.ReadLine();
+                if (int.Parse(resultGamePartner) == 1 || int.Parse(resultGamePartner) == 0)
+                {
+                    checkAgainHowManyPlayers = false;
+                    break;
+                }
+                else
+                {
+                    string valueError = string.Format("Wrong value was inserted, please try again!" + Environment.NewLine);
+                    Console.WriteLine(valueError);
+                    continue;
+                }
+            }
+            return int.Parse(resultGamePartner);
+        }
+
+        public static string GetPlayerName()
+        {
+            string userName = string.Empty;
+            bool checkUserName = true;
+
+            while (checkUserName)
+            {
+                Console.WriteLine("Please Enter player's Name (without spaces): ");
+                userName = Console.ReadLine();
+
+                if (userName.Length > 20)
+                {
+                    Console.WriteLine("The name provided is longer than 20 characters. Try again");
+                    continue;
+                }
+                else if (userName.Contains(" "))
+                {
+                    Console.WriteLine("Please provide a string without spaces. Try again.");
+                    continue;
+                }
+                else
+                {
+                    checkUserName = false;
+                }
+            }
+            return userName;
+        }
+        public static void NewGame()
+        {
+            Console.WriteLine("Welcome to The Checkers Game!");
+            string p1PlayerName = GetPlayerName();
+            Player p1 = new Player(p1PlayerName);
+            int boardSize = GetBoardSizeFromUser();
+            int withOrWithOutPartner = CheckHowManyPlayers();
+            if (withOrWithOutPartner == 1)
+            {
+                Console.WriteLine("Player 2:");
+                string p2PlayerName = GetPlayerName();
+                Player p2 = new Player(p2PlayerName);
+            }
+            GameBoard b = new GameBoard(boardSize);
+
+            //every print board we will need to switch between the players names e.g Shai turn:
+            GameBoard.PrintBoard(boardSize, p1PlayerName);
         }
 
         public static void Main()
         {
-           
-            string name = GetUserName();
-            int boardSize = GetBoardSizeFromUser();
-            GameBoard b = new GameBoard(boardSize);
-
-            GameBoard.PrintBoard(boardSize);
-            Console.WriteLine(boardSize);
-
-
+            NewGame();
         }
     }
 }
