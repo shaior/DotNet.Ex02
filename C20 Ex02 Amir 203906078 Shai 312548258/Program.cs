@@ -10,8 +10,7 @@ namespace C20_Ex02
     {
         public static void Main()
         {
-            //TEST
-            // watch csproj and namespace change
+            
         }
     }
 }
