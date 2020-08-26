@@ -11,16 +11,15 @@ namespace C20_Ex02
     {
         public static void Main()
         {
-
             string[,] arr = new string[8, 8];
 
             int rowLength = arr.GetLength(0);
             int colLength = arr.GetLength(1);
-            string letter = "O";
+            string Oletter = " O ";
 
             for (int i = 0; i < (rowLength/2) -1; i++)
             {
-                Console.WriteLine("=======================================");
+                Console.WriteLine("=================================");
                 for (int j = 0; j < colLength; j++)
                 {
                     Console.Write(string.Format("|"));
@@ -28,38 +27,32 @@ namespace C20_Ex02
                     {
                         if ((j % 2) != 0)
                         {
-                            //Console.Write(string.Format("|"));
-                            Console.Write(string.Format("  {0}  ", letter));
+                            Console.Write(string.Format("{0}", Oletter));
+
                         }
                         else
                         {
-                            //Console.Write(string.Format("|"));
-                            Console.Write(string.Format("    "));
+                            Console.Write(string.Format("   "));
                         }
-
                     }
                     else
                     {
-                          if ((j % 2) == 0)
+                        if ((j % 2) == 0)
                         {
-                            //Console.Write(string.Format("|"));
-                            Console.Write(string.Format("  {0}  ", letter));
+                            Console.Write(string.Format("{0}", Oletter));
                         }
                         else
                         {
-                            //Console.Write(string.Format("|"));
-                            Console.Write(string.Format("    "));
+                            Console.Write(string.Format("   "));
                         }
                     }
-                    Console.Write(string.Format("|"));
                 }
-
+                Console.Write(string.Format("|"));
                 Console.Write(Environment.NewLine); 
             }
-            Console.WriteLine("=======================================");
+            Console.WriteLine("=================================");
 
-     
-
+            Console.ReadLine();
         }
     }
 }
