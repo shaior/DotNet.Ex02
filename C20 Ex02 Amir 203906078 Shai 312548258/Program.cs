@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace C20_Ex02_Amir_203906078_Shai_312548258
+namespace C20_Ex02
 {
     class Program
     {
         public static void Main()
         {
             //TEST
+            // watch csproj and namespace change
         }
     }
 }

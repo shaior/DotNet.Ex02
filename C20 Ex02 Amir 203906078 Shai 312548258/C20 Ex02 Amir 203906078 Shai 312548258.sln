@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C20 Ex02 Amir 203906078 Shai 312548258", "C20 Ex02 Amir 203906078 Shai 312548258.csproj", "{7FF68900-3445-4C56-A115-B45FDAE08458}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C20_Ex02", "C20_Ex02.csproj", "{7FF68900-3445-4C56-A115-B45FDAE08458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
