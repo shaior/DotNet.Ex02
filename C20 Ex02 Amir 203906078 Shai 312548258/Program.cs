@@ -10,7 +10,7 @@ namespace C20_Ex02_Amir_203906078_Shai_312548258
     {
         public static void Main()
         {
-
+            //TEST
         }
     }
 }
