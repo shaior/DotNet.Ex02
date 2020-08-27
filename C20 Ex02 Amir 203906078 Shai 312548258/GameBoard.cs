@@ -1,4 +1,4 @@
-﻿using C20_Ex02_Amir_203906078_Shai_312548258;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +10,14 @@ namespace C20_Ex02
     class GameBoard
     {
         private int m_BoardSize = 0;
-        public const string k_SoldierO = " O ";
-        public const string k_SoldierX = " X ";
+        private string[,] m_Board;
+        public const string k_PawnO = " O ";
+        public const string k_PawnX = " X ";
 
         public GameBoard(int i_BoardSize)
         {
             this.m_BoardSize = i_BoardSize;
+            this.m_Board = new string[this.m_BoardSize,this.m_BoardSize];
         }
 
         public int BoardSize
@@ -28,6 +30,61 @@ namespace C20_Ex02
             set
             {
                 m_BoardSize = value;
+            }
+        }
+        public string[,] Board
+        {
+            get
+            {
+                return m_Board;
+            }
+
+            set
+            {
+                m_Board = value;
+            }
+        }
+
+        public static void InitializeBoard(int i_BoardSize , string[,] board)
+        {
+            string pawnType = k_PawnO;
+            for (int i = 0; i < i_BoardSize; i++)
+            {
+                if (i == (i_BoardSize / 2) + 1)
+                {
+                    pawnType = k_PawnX;
+                }
+                else if (i == (i_BoardSize / 2) - 1 || i == (i_BoardSize / 2))
+                {
+                    pawnType = "   ";
+                }
+
+                for (int j = 0; j < i_BoardSize; j++)
+                {
+                    if ((i % 2) == 0)
+                    {
+                        if ((j % 2) != 0)
+                        {
+                            board[i, j] = pawnType;
+                        }
+                        else
+                        {
+                            board[i, j] = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        if ((j % 2) == 0)
+                        {
+                            board[i, j] = pawnType;
+                        }
+                        else
+                        {
+                            board[i, j] = string.Empty;
+                        }
+                    }
+                }
+
             }
         }
 
@@ -46,13 +103,15 @@ namespace C20_Ex02
             {
                 stopLetterPrinting = 'J';
             }
+
             for (char letter = 'A'; letter <= stopLetterPrinting; letter++)
             {
-                
                 Console.Write(string.Format("   {0}",letter));
             }
+
             Console.Write(Environment.NewLine);
         }
+
         public static void PrintLetterOnSide(int i_BoardSize,ref char startLetterPrinting)
         {
             char stopLetterPrinting;
@@ -68,34 +127,37 @@ namespace C20_Ex02
             {
                 stopLetterPrinting = 'j';
             }
+
             if (startLetterPrinting <= stopLetterPrinting)
             {
                 Console.Write(string.Format("{0}",startLetterPrinting));
                 startLetterPrinting++;
             }
         }
+
         /// <summary>
-        /// This method prints the game board
+        /// This method prints the game board.
         /// </summary>
         /// <param name="i_BoardSize">the board size represented by one digit</param>
         public static void PrintBoard(int i_BoardSize,string i_PlayerName)
         {
-            string[,] arr = new string[i_BoardSize,i_BoardSize];
-            int rowLength = arr.GetLength(0);
-            int colLength = arr.GetLength(1);
-            string soldierType = k_SoldierO;
+            string[,] arr = new string[i_BoardSize,i_BoardSize]; //not needed
+            int rowLength = arr.GetLength(0); // not needed
+            int colLength = arr.GetLength(1); //not needed
+            string pawnType = k_PawnO;
             PrintLettersOnTop(i_BoardSize);
             char startLetterPrinting = 'a';
             for (int i = 0; i < rowLength; i++)
             {
                 if (i == (rowLength / 2) + 1)
                 {
-                    soldierType = k_SoldierX;
+                    pawnType = k_PawnX;
                 }
                 else if(i == (rowLength / 2) - 1 || i == (rowLength / 2))
                 {
-                    soldierType = "   ";
+                    pawnType = "   ";
                 }
+
                 printRowsSeparator(rowLength);
                 PrintLetterOnSide(i_BoardSize,ref startLetterPrinting);
                 for (int j = 0; j < colLength; j++)
@@ -105,7 +167,7 @@ namespace C20_Ex02
                     {
                         if ((j % 2) != 0)
                         {
-                            Console.Write(string.Format("{0}", soldierType));
+                            Console.Write(string.Format("{0}", pawnType));
                         }
                         else
                         {
@@ -116,7 +178,7 @@ namespace C20_Ex02
                     {
                         if ((j % 2) == 0)
                         {
-                            Console.Write(string.Format("{0}", soldierType));
+                            Console.Write(string.Format("{0}", pawnType));
                         }
                         else
                         {
@@ -129,7 +191,7 @@ namespace C20_Ex02
                 Console.Write(Environment.NewLine);
             }
             printRowsSeparator(rowLength);
-            Console.WriteLine(string.Format("{0}'s turn:", i_PlayerName));
+            Console.WriteLine(string.Format("{0}'s turn:", i_PlayerName)); //TODO: check if it is ok here.. 
         }
 
         /// <summary>
@@ -150,9 +212,14 @@ namespace C20_Ex02
             {
                 Console.WriteLine(" =========================================");
             }
+        }
 
 
-
+        public enum eBoardSize 
+        {
+            SixBySix = 6,
+            EightByEight = 8,
+            TenByTen = 10,
         }
     }
 }
