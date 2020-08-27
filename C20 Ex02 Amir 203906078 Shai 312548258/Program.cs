@@ -1,9 +1,10 @@
-﻿using C20_Ex02_Amir_203906078_Shai_312548258;
+﻿//using C20_Ex02_Amir_203906078_Shai_312548258;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 
 namespace C20_Ex02
@@ -17,7 +18,7 @@ namespace C20_Ex02
             Console.WriteLine("Choose your game board size.");
             Console.WriteLine("You can type 6 for (6x6), 8 for (8x8) or 10 for (10x10): ");
             bool boardSizeInputCheck = true;
-
+            
             while (boardSizeInputCheck)
             {
                 boardSizeFromUser = Console.ReadLine();
@@ -86,6 +87,37 @@ namespace C20_Ex02
             }
             return userName;
         }
+
+        public static void GetPlayerPicks(out string io_PlayerMove,int i_BoardSize)
+        {   
+            bool checkInput = true;
+            io_PlayerMove = string.Empty;
+            while (checkInput)
+            {
+                Console.WriteLine("Make Your Move: ");
+                io_PlayerMove = Console.ReadLine();
+                foreach (var letter in io_PlayerMove)
+                {
+                    if (char.IsDigit(letter))
+                    {
+                        Console.WriteLine("This input is not valid. Try Again");
+                        continue;
+                    }
+                }
+
+                if (io_PlayerMove.Length > 5)
+                {
+                    Console.WriteLine("This input is not valid. Try Again");
+                    continue;
+                }
+
+                checkInput = false;
+            }
+        }
+        
+
+        
+
         public static void NewGame()
         {
             Console.WriteLine("Welcome to The Checkers Game!");
@@ -107,7 +139,20 @@ namespace C20_Ex02
 
         public static void Main()
         {
-            NewGame();
+            //NewGame();
+            string name = GetPlayerName();
+            int size = GetBoardSizeFromUser();
+            GameBoard board = new GameBoard(size);
+            GameBoard.PrintBoard(size,name);  // need to remove the name and find other solution
+            GameBoard.InitializeBoard(size,board.Board);
+
+            Player p1 = new Player(name);
+            string playerMove;
+
+            GetPlayerPicks(out playerMove, size);
+            p1.PlayerMove = playerMove;
+
+
         }
     }
 }

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace C20_Ex02_Amir_203906078_Shai_312548258
+namespace C20_Ex02
 {
     public class Player
     {
         
         private string m_PlayerName;
         private string m_PlayerNumber;
+        private string m_PlayerMove;
 
         
         public Player(string i_PlayerName)
@@ -39,6 +40,19 @@ namespace C20_Ex02_Amir_203906078_Shai_312548258
                 m_PlayerName = value;
             }
         }
+        public string PlayerMove
+        {
+            get
+            {
+                return m_PlayerMove;
+            }
+            set
+            {
+                m_PlayerMove = value;
+            }
+        }
+        
+
 
     }
 }
