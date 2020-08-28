@@ -69,7 +69,7 @@ namespace C20_Ex02
                         }
                         else
                         {
-                            board[i, j] = string.Empty;
+                            board[i, j] = "   ";
                         }
                     }
                     else
@@ -80,7 +80,7 @@ namespace C20_Ex02
                         }
                         else
                         {
-                            board[i, j] = string.Empty;
+                            board[i, j] = "   ";
                         }
                     }
                 }
@@ -135,54 +135,63 @@ namespace C20_Ex02
             }
         }
 
+      /*  public static void PrintBoardCurrentState(string[,] board)
+        {
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board.Length; j++)
+                {
+                    Console.Write(string.Format("|{0} ", board[i, j]));
+                }
+                Console.Write(Environment.NewLine + Environment.NewLine);
+            }*/
+
+        
         /// <summary>
         /// This method prints the game board.
         /// </summary>
         /// <param name="i_BoardSize">the board size represented by one digit</param>
-        public static void PrintBoard(int i_BoardSize,string i_PlayerName)
+        public static void PrintBoard(int i_BoardSize,string i_PlayerName, string[,] i_Board)
         {
-            string[,] arr = new string[i_BoardSize,i_BoardSize]; //not needed
-            int rowLength = arr.GetLength(0); // not needed
-            int colLength = arr.GetLength(1); //not needed
             string pawnType = k_PawnO;
             PrintLettersOnTop(i_BoardSize);
             char startLetterPrinting = 'a';
-            for (int i = 0; i < rowLength; i++)
+            for (int i = 0; i < i_BoardSize; i++)
             {
-                if (i == (rowLength / 2) + 1)
+         /*       if (i == (i_BoardSize / 2) + 1)
                 {
                     pawnType = k_PawnX;
                 }
-                else if(i == (rowLength / 2) - 1 || i == (rowLength / 2))
+                else if (i == (i_BoardSize / 2) - 1 || i == (i_BoardSize / 2))
                 {
                     pawnType = "   ";
-                }
+                }*/
 
-                printRowsSeparator(rowLength);
+                printRowsSeparator(i_BoardSize);
                 PrintLetterOnSide(i_BoardSize,ref startLetterPrinting);
-                for (int j = 0; j < colLength; j++)
+                for (int j = 0; j < i_BoardSize; j++)
                 {
                     Console.Write(string.Format("|"));
                     if ((i % 2) == 0)
                     {
                         if ((j % 2) != 0)
                         {
-                            Console.Write(string.Format("{0}", pawnType));
+                            Console.Write(string.Format("{0}", i_Board[i,j]));
                         }
                         else
                         {
-                            Console.Write(string.Format("   "));
+                            Console.Write(string.Format("{0}", i_Board[i, j]));
                         }
                     }
                     else
                     {
                         if ((j % 2) == 0)
                         {
-                            Console.Write(string.Format("{0}", pawnType));
+                            Console.Write(string.Format("{0}", i_Board[i, j]));
                         }
                         else
                         {
-                            Console.Write(string.Format("   "));
+                            Console.Write(string.Format("{0}", i_Board[i, j]));
                         }
                     }
                 }
@@ -190,7 +199,7 @@ namespace C20_Ex02
                 Console.Write(string.Format("|"));
                 Console.Write(Environment.NewLine);
             }
-            printRowsSeparator(rowLength);
+            printRowsSeparator(i_BoardSize);
             Console.WriteLine(string.Format("{0}'s turn:", i_PlayerName)); //TODO: check if it is ok here.. 
         }
 

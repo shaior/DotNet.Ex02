@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
+using System.Text.RegularExpressions;
+using System.Security.Cryptography.X509Certificates;
 
 namespace C20_Ex02
 {
@@ -18,7 +18,6 @@ namespace C20_Ex02
             Console.WriteLine("Choose your game board size.");
             Console.WriteLine("You can type 6 for (6x6), 8 for (8x8) or 10 for (10x10): ");
             bool boardSizeInputCheck = true;
-            
             while (boardSizeInputCheck)
             {
                 boardSizeFromUser = Console.ReadLine();
@@ -28,7 +27,6 @@ namespace C20_Ex02
                     Console.WriteLine("Wrong size. Please choose 6, 8 or 10.");
                     continue;
                 }
-
                 boardSizeInputCheck = false;
             }
             return integerBoardSize;
@@ -64,7 +62,6 @@ namespace C20_Ex02
         {
             string userName = string.Empty;
             bool checkUserName = true;
-
             while (checkUserName)
             {
                 Console.WriteLine("Please Enter player's Name (without spaces): ");
@@ -88,36 +85,87 @@ namespace C20_Ex02
             return userName;
         }
 
-        public static void GetPlayerPicks(out string io_PlayerMove,int i_BoardSize)
-        {   
-            bool checkInput = true;
-            io_PlayerMove = string.Empty;
-            while (checkInput)
+        public static int[] ConvertInputLettersToIndexes(string i_PlayerInput)
+        {
+            int numberOfIndexes = 4;
+            int j = 0;
+            int[] convertedIndexes = new int[numberOfIndexes];
+            foreach (var letter in i_PlayerInput)
             {
-                Console.WriteLine("Make Your Move: ");
-                io_PlayerMove = Console.ReadLine();
-                foreach (var letter in io_PlayerMove)
+                if (letter == '>')
                 {
-                    if (char.IsDigit(letter))
-                    {
-                        Console.WriteLine("This input is not valid. Try Again");
-                        continue;
-                    }
-                }
-
-                if (io_PlayerMove.Length > 5)
-                {
-                    Console.WriteLine("This input is not valid. Try Again");
                     continue;
                 }
-
-                checkInput = false;
+                else
+                {
+                    convertedIndexes[j] = char.ToUpper(letter) - 65;
+                    j++;
+                }
             }
+            return convertedIndexes;
+        }
+        public static string CheckInputByRegex(Regex userInputRegex)
+        {
+            string i_PlayerInput = string.Empty;
+            bool isInputOk = false;
+            while (!isInputOk)
+            {
+                Console.WriteLine("Make Your Move (format: Gf>He): ");
+                i_PlayerInput = Console.ReadLine();
+                if (userInputRegex.IsMatch(i_PlayerInput))
+                {
+                    Console.WriteLine("input is ok");
+                    isInputOk = true;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("input is not ok, try again!");
+                    continue;
+                }
+            }
+            return i_PlayerInput;
+        }
+        public static string GetPlayerMoves(int i_BoardSize)
+        {
+            string playerMove = string.Empty;
+            if (i_BoardSize == 6)
+            {
+                Regex userInputRegex = new Regex(@"^[A-F][a-f]>[A-F][a-f]");
+                playerMove = CheckInputByRegex(userInputRegex);
+            }
+            else if (i_BoardSize == 8)
+            {
+                Regex userInputRegex = new Regex(@"^[A-H][a-h]>[A-H][a-h]");
+                playerMove = CheckInputByRegex(userInputRegex);
+            }
+            else
+            {
+                Regex userInputRegex = new Regex(@"^[A-Y][a-y]>[A-Y[a-y]");
+                playerMove = CheckInputByRegex(userInputRegex);
+            }
+            return playerMove;
         }
         
+        public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard board)
+        {
+            bool isMoveEmpty = false;
+            if (!isMoveEmpty)
+            {
+                if (board.Board[i_PlayerMove[0], i_PlayerMove[1]] == "   ")
+                {
+                    isMoveEmpty = false;
+                    Console.WriteLine("You can't make an empty move, try again!");
+                }
+                else
+                {
+                    Console.WriteLine("Move is ok");
+                    isMoveEmpty = true;
+                }
+            }
+            return isMoveEmpty;
 
-        
-
+        }
         public static void NewGame()
         {
             Console.WriteLine("Welcome to The Checkers Game!");
@@ -134,7 +182,12 @@ namespace C20_Ex02
             GameBoard b = new GameBoard(boardSize);
 
             //every print board we will need to switch between the players names e.g Shai turn:
-            GameBoard.PrintBoard(boardSize, p1PlayerName);
+            //GameBoard.PrintBoard(boardSize, p1PlayerName);
+        }
+        public static void MakeMoves(int[] movesToMake, ref GameBoard board1)
+        {
+            board1.Board[movesToMake[3], movesToMake[2]] = board1.Board[movesToMake[1], movesToMake[0]];
+            board1.Board[movesToMake[1], movesToMake[0]] = "   ";
         }
 
         public static void Main()
@@ -142,16 +195,25 @@ namespace C20_Ex02
             //NewGame();
             string name = GetPlayerName();
             int size = GetBoardSizeFromUser();
-            GameBoard board = new GameBoard(size);
-            GameBoard.PrintBoard(size,name);  // need to remove the name and find other solution
-            GameBoard.InitializeBoard(size,board.Board);
-
+            GameBoard board1 = new GameBoard(size);
+            GameBoard.InitializeBoard(size, board1.Board);
+            // board1.Board[3, 0] = board1.Board[5, 0];
+            
+            GameBoard.PrintBoard(size,name, board1.Board);  // need to remove the name and find other solution
+            
             Player p1 = new Player(name);
-            string playerMove;
 
-            GetPlayerPicks(out playerMove, size);
-            p1.PlayerMove = playerMove;
+            bool isMoveOk = false;
+            int[] movesToMake = { };
+            while (!isMoveOk)
+            {
+                string playerMove = GetPlayerMoves(size);
+                movesToMake = ConvertInputLettersToIndexes(playerMove);
+                isMoveOk = CheckPlayerMove(movesToMake, board1);
+            }
 
+            MakeMoves(movesToMake, ref board1);
+            GameBoard.PrintBoard(size, name, board1.Board);
 
         }
     }
