@@ -86,7 +86,7 @@ namespace C20_Ex02
             return userName;
         }
 
-        public static string ComputerMoves(Regex i_regex,char i_stoppingLetter)
+        public static string ComputerMoves(char i_stoppingLetter)
         {
 
             string computerMove = string.Empty;
@@ -233,9 +233,7 @@ namespace C20_Ex02
 
             MakeMoves(movesToMake, ref board1);
             GameBoard.PrintBoard(size, name, board1.Board);
-            Regex userInputRegex = new Regex(@"^[A-H][a-h]>[A-H][a-h]");
-            
-            string randomMove = ComputerMoves(userInputRegex, 'H');
+            string randomMove = ComputerMoves('H');
             Console.WriteLine(randomMove);
             
             
