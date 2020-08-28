@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography.X509Certificates;
+using Fare;
 
 namespace C20_Ex02
 {
@@ -83,6 +84,24 @@ namespace C20_Ex02
                 }
             }
             return userName;
+        }
+
+        public static string ComputerMoves(Regex i_regex,char i_stoppingLetter)
+        {
+
+            string computerMove = string.Empty;
+            Random rnd = new Random();
+            
+            char firstLetter = (char)rnd.Next('A', i_stoppingLetter);
+            char secondLetter = (char)rnd.Next('A', i_stoppingLetter);
+            char thirdLetter = (char)rnd.Next('A', i_stoppingLetter);
+            char FourthLetter = (char)rnd.Next('A', i_stoppingLetter);
+            computerMove = computerMove + firstLetter.ToString().ToUpper()
+                            + secondLetter.ToString().ToLower() + '>'
+                            + thirdLetter.ToString().ToUpper()
+                            + FourthLetter.ToString().ToLower();
+
+            return computerMove;
         }
 
         public static int[] ConvertInputLettersToIndexes(string i_PlayerInput)
@@ -214,7 +233,12 @@ namespace C20_Ex02
 
             MakeMoves(movesToMake, ref board1);
             GameBoard.PrintBoard(size, name, board1.Board);
-
+            Regex userInputRegex = new Regex(@"^[A-H][a-h]>[A-H][a-h]");
+            
+            string randomMove = ComputerMoves(userInputRegex, 'H');
+            Console.WriteLine(randomMove);
+            
+            
         }
     }
 }
