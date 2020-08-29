@@ -115,11 +115,11 @@ namespace C20_Ex02
         public static void PrintLetterOnSide(int i_BoardSize,ref char startLetterPrinting)
         {
             char stopLetterPrinting;
-            if (i_BoardSize == 6)
+            if (i_BoardSize == (int)eBoardSize.SixBySix)
             {
                 stopLetterPrinting = 'f';
             }
-            else if (i_BoardSize == 8)
+            else if (i_BoardSize == (int)eBoardSize.EightByEight)
             {
                 stopLetterPrinting = 'h';
             }
