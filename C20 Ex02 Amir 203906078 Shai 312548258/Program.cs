@@ -104,7 +104,15 @@ namespace C20_Ex02
 
             return computerMove;
         }
-
+        public static void swapArrayIndexes(ref int[] i_Array)
+        {
+            int firstIndexHolder = i_Array[1];
+            i_Array[1] = i_Array[0];
+            i_Array[0] = firstIndexHolder;
+            int secondIndexHolder = i_Array[3];
+            i_Array[3] = i_Array[2];
+            i_Array[2] = secondIndexHolder;
+        }
         public static int[] ConvertInputLettersToIndexes(string i_PlayerInput)
         {
             int numberOfIndexes = 4;
@@ -122,6 +130,7 @@ namespace C20_Ex02
                     j++;
                 }
             }
+            swapArrayIndexes(ref convertedIndexes);
             return convertedIndexes;
         }
         public static string CheckInputByRegex(Regex userInputRegex)
@@ -134,7 +143,7 @@ namespace C20_Ex02
                 i_PlayerInput = Console.ReadLine();
                 if (userInputRegex.IsMatch(i_PlayerInput))
                 {
-                    Console.WriteLine("input is ok");
+                    //Console.WriteLine("input is ok");
                     isInputOk = true;
                     break;
                 }
@@ -170,16 +179,35 @@ namespace C20_Ex02
         public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard board)
         {
             bool isMoveEmpty = false;
+            bool forwardMoveIndicator = i_PlayerMove[1] == i_PlayerMove[3];
+            bool sideMoveIndicator = i_PlayerMove[0] == i_PlayerMove[2];
+            int diagonalMove = Math.Abs(i_PlayerMove[0] - i_PlayerMove[2]);
+            string emptySlot = "   ";
             if (!isMoveEmpty)
             {
-                if (board.Board[i_PlayerMove[0], i_PlayerMove[1]] == "   ")
+
+                if (board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
                 {
                     isMoveEmpty = false;
-                    Console.WriteLine("You can't make an empty move, try again!");
+                    Console.WriteLine("You can't make an empty move, try again!" + Environment.NewLine);
                 }
-                else
+                else if (forwardMoveIndicator)
                 {
-                    Console.WriteLine("Move is ok");
+                    isMoveEmpty = false;
+                    Console.WriteLine("You can't make forward moves, try again! " + Environment.NewLine);
+                }
+                else if (sideMoveIndicator)
+                {
+                    isMoveEmpty = false;
+                    Console.WriteLine("You can't make side moves, try again! " + Environment.NewLine);
+                }
+                else if(board.Board[i_PlayerMove[2], i_PlayerMove[3]] != emptySlot)
+                {
+                    isMoveEmpty = false;
+                    Console.WriteLine("This slot is taken, try again! " + Environment.NewLine);
+                }
+                else if (diagonalMove == 1)
+                {
                     isMoveEmpty = true;
                 }
             }
@@ -206,8 +234,8 @@ namespace C20_Ex02
         }
         public static void MakeMoves(int[] movesToMake, ref GameBoard board1)
         {
-            board1.Board[movesToMake[3], movesToMake[2]] = board1.Board[movesToMake[1], movesToMake[0]];
-            board1.Board[movesToMake[1], movesToMake[0]] = "   ";
+            board1.Board[movesToMake[2], movesToMake[3]] = board1.Board[movesToMake[0], movesToMake[1]];
+            board1.Board[movesToMake[0], movesToMake[1]] = "   ";
         }
 
         public static void Main()
