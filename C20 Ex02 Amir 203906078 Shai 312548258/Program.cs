@@ -17,7 +17,7 @@ namespace C20_Ex02
         {
             string boardSizeFromUser = string.Empty;
             int integerBoardSize = 0;
-            Console.WriteLine("Choose your game board size.");
+            Console.WriteLine("Choose your game i_Board size.");
             Console.WriteLine("You can type 6 for (6x6), 8 for (8x8) or 10 for (10x10): ");
             bool boardSizeInputCheck = true;
             while (boardSizeInputCheck)
@@ -152,18 +152,19 @@ namespace C20_Ex02
                     Console.WriteLine("input is not ok, try again!");
                     continue;
                 }
+                // TODO: NEED TO ADD QUIT GAME STATEMENT(IF USER PRESS "Q")
             }
             return i_PlayerInput;
         }
         public static string GetPlayerMoves(int i_BoardSize)
         {
             string playerMove = string.Empty;
-            if (i_BoardSize == 6)
+            if (i_BoardSize == (int)GameBoard.eBoardSize.SixBySix)
             {
                 Regex userInputRegex = new Regex(@"^[A-F][a-f]>[A-F][a-f]");
                 playerMove = CheckInputByRegex(userInputRegex);
             }
-            else if (i_BoardSize == 8)
+            else if (i_BoardSize == (int)GameBoard.eBoardSize.EightByEight)
             {
                 Regex userInputRegex = new Regex(@"^[A-H][a-h]>[A-H][a-h]");
                 playerMove = CheckInputByRegex(userInputRegex);
@@ -176,7 +177,7 @@ namespace C20_Ex02
             return playerMove;
         }
         
-        public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard board)
+        public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard i_Board)
         {
             bool isMoveEmpty = false;
             bool forwardMoveIndicator = i_PlayerMove[1] == i_PlayerMove[3];
@@ -186,7 +187,7 @@ namespace C20_Ex02
             if (!isMoveEmpty)
             {
 
-                if (board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
+                if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
                 {
                     isMoveEmpty = false;
                     Console.WriteLine("You can't make an empty move, try again!" + Environment.NewLine);
@@ -201,7 +202,7 @@ namespace C20_Ex02
                     isMoveEmpty = false;
                     Console.WriteLine("You can't make side moves, try again! " + Environment.NewLine);
                 }
-                else if(board.Board[i_PlayerMove[2], i_PlayerMove[3]] != emptySlot)
+                else if(i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] != emptySlot)
                 {
                     isMoveEmpty = false;
                     Console.WriteLine("This slot is taken, try again! " + Environment.NewLine);
@@ -214,28 +215,113 @@ namespace C20_Ex02
             return isMoveEmpty;
 
         }
-        public static void NewGame()
-        {
-            Console.WriteLine("Welcome to The Checkers Game!");
-            string p1PlayerName = GetPlayerName();
-            Player p1 = new Player(p1PlayerName);
-            int boardSize = GetBoardSizeFromUser();
-            int withOrWithOutPartner = CheckHowManyPlayers();
-            if (withOrWithOutPartner == 1)
-            {
-                Console.WriteLine("Player 2:");
-                string p2PlayerName = GetPlayerName();
-                Player p2 = new Player(p2PlayerName);
-            }
-            GameBoard b = new GameBoard(boardSize);
 
-            //every print board we will need to switch between the players names e.g Shai turn:
-            //GameBoard.PrintBoard(boardSize, p1PlayerName);
+        /// <summary>
+        /// checks if there is opponent pawn that can be captured.
+        /// </summary>
+        /// <param name="i_PlayerMove"></param>
+        /// <param name="i_Board"></param>
+        public static void CheckCapturePossibility(int[] i_PlayerMove,GameBoard i_Board)
+        {
+            
         }
+
+        //public static void NewGame()
+        //{
+        //    Console.WriteLine("Welcome to The Checkers Game!");
+        //    string p1PlayerName = GetPlayerName();
+        //    Player p1 = new Player(p1PlayerName);
+        //    int boardSize = GetBoardSizeFromUser();
+        //    int withOrWithOutPartner = CheckHowManyPlayers();
+        //    if (withOrWithOutPartner == 1)
+        //    {
+        //        Console.WriteLine("Player 2:");
+        //        string p2PlayerName = GetPlayerName();
+        //        Player p2 = new Player(p2PlayerName);
+        //    }
+        //    GameBoard b = new GameBoard(boardSize);
+
+        //    //every print i_Board we will need to switch between the players names e.g Shai turn:
+        //    //GameBoard.PrintBoard(boardSize, p1PlayerName);
+        //}
         public static void MakeMoves(int[] movesToMake, ref GameBoard board1)
         {
             board1.Board[movesToMake[2], movesToMake[3]] = board1.Board[movesToMake[0], movesToMake[1]];
             board1.Board[movesToMake[0], movesToMake[1]] = "   ";
+        }
+
+        public static void tryGame()
+        {
+            
+            while (true)
+            {
+                int pawnO = 0;
+                int pawnX = 1;
+                GameBoard board1 = new GameBoard(GetBoardSizeFromUser());
+                GameBoard.InitializeBoard(board1.BoardSize, board1.Board);
+                GameBoard.PrintBoard(board1.BoardSize, board1.Board);
+                
+                Player p1 = new Player(GetPlayerName(),pawnO);
+                string opponent;
+                Player p2 = null;
+                Player computerPlayer = null;
+                if (CheckHowManyPlayers() == 1)
+                {
+                    Console.WriteLine("Player 2: ");
+                    p2 = new Player(GetPlayerName(),pawnX);
+                    opponent = "Player2";
+                }
+                else
+                {
+                    
+                    computerPlayer = new Player(computerPlayer.ComputerName, pawnX);
+                    opponent = "Computer";
+                }
+
+                bool playing = true;
+                while (playing)
+                {
+
+                    bool player1Turn = true;
+                    bool isMoveOk = true;
+                    if (player1Turn)
+                    {
+                        p1.PlayerMove = ConvertInputLettersToIndexes(GetPlayerMoves(board1.BoardSize));
+                        isMoveOk = CheckPlayerMove(p1.PlayerMove, board1);
+                        if (!isMoveOk)
+                        {
+                            continue;
+                        }
+
+                        MakeMoves(p1.PlayerMove, ref board1);
+                        GameBoard.PrintBoard(board1.BoardSize, board1.Board);
+                        player1Turn = false;
+                        
+                    }
+                    if (opponent == "Player2")
+                    {
+                        p2.PlayerMove = ConvertInputLettersToIndexes(GetPlayerMoves(board1.BoardSize));
+                        isMoveOk = CheckPlayerMove(p2.PlayerMove, board1);
+                        if (!isMoveOk)
+                        {
+                            continue;
+                        }
+                        MakeMoves(p2.PlayerMove, ref board1);
+                        GameBoard.PrintBoard(board1.BoardSize, board1.Board);
+                        player1Turn = true;
+                    }
+                    else
+                    {
+                        // TODO: NEED TO ADD COMPUTER RANDOM MOVES
+                       // computerPlayer.PlayerMove = ConvertInputLettersToIndexes()
+                    }
+
+                }
+
+               
+
+
+            }
         }
 
         public static void Main()
@@ -247,24 +333,24 @@ namespace C20_Ex02
             GameBoard.InitializeBoard(size, board1.Board);
             // board1.Board[3, 0] = board1.Board[5, 0];
             
-            GameBoard.PrintBoard(size,name, board1.Board);  // need to remove the name and find other solution
+            //GameBoard.PrintBoard(size,name, board1.Board);  // need to remove the name and find other solution
             //Ex02.ConsoleUtils.Screen.Clear();
-            Player p1 = new Player(name);
+            //Player p1 = new Player(name);
 
             bool isMoveOk = false;
-            int[] movesToMake = { };
+            //int[] movesToMake = { };
             while (!isMoveOk)
             {
                 string playerMove = GetPlayerMoves(size);
-                movesToMake = ConvertInputLettersToIndexes(playerMove);
-                isMoveOk = CheckPlayerMove(movesToMake, board1);
+                //p1.PlayerMove = ConvertInputLettersToIndexes(playerMove);
+                //isMoveOk = CheckPlayerMove(p1.PlayerMove, board1);
             }
 
-            MakeMoves(movesToMake, ref board1);
-            GameBoard.PrintBoard(size, name, board1.Board);
+            //MakeMoves(p1.PlayerMove, ref board1);
+            //GameBoard.PrintBoard(size, name, board1.Board);
             string randomMove = ComputerMoves('H');
             Console.WriteLine(randomMove);
-            
+
         }
     }
 }
