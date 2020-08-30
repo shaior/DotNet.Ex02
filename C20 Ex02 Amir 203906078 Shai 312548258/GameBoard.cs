@@ -91,11 +91,11 @@ namespace C20_Ex02
         public static void PrintLettersOnTop(int i_BoardSize)
         {
             char stopLetterPrinting;
-            if (i_BoardSize == 6)
+            if (i_BoardSize == (int)eBoardSize.SixBySix)
             {
                 stopLetterPrinting = 'F';
             }
-            else if (i_BoardSize == 8)
+            else if (i_BoardSize == (int)eBoardSize.EightByEight)
             {
                 stopLetterPrinting = 'H';
             }
@@ -106,10 +106,10 @@ namespace C20_Ex02
 
             for (char letter = 'A'; letter <= stopLetterPrinting; letter++)
             {
-                Console.Write(string.Format("   {0}",letter));
+                Console.Write(string.Format("   {0}", letter));
             }
 
-            Console.Write(Environment.NewLine);
+            Console.Write(Environment.NewLine); // TODO: combine printletters method to one method.(its similar)
         }
 
         public static void PrintLetterOnSide(int i_BoardSize,ref char startLetterPrinting)
@@ -151,7 +151,7 @@ namespace C20_Ex02
         /// This method prints the game board.
         /// </summary>
         /// <param name="i_BoardSize">the board size represented by one digit</param>
-        public static void PrintBoard(int i_BoardSize,string i_PlayerName, string[,] i_Board)
+        public static void PrintBoard(int i_BoardSize, string[,] i_Board)
         {
             string pawnType = k_PawnO;
             PrintLettersOnTop(i_BoardSize);
@@ -200,7 +200,6 @@ namespace C20_Ex02
                 Console.Write(Environment.NewLine);
             }
             printRowsSeparator(i_BoardSize);
-            Console.WriteLine(string.Format("{0}'s turn:", i_PlayerName)); //TODO: check if it is ok here.. 
         }
 
         /// <summary>
@@ -209,15 +208,15 @@ namespace C20_Ex02
         /// <param name="i_numberOfRows"> number of rows</param>
         private static void printRowsSeparator(int i_numberOfRows)
         {
-            if (i_numberOfRows == 6)
+            if (i_numberOfRows == (int)eBoardSize.SixBySix)
             {
                 Console.WriteLine(" =========================");
             }
-            else if (i_numberOfRows == 8)
+            else if (i_numberOfRows == (int)eBoardSize.EightByEight)
             {
                 Console.WriteLine(" =================================");
             }
-            else if (i_numberOfRows == 10)
+            else if (i_numberOfRows == (int)eBoardSize.TenByTen)
             {
                 Console.WriteLine(" =========================================");
             }
