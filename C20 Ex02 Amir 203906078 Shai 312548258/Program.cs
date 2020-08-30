@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography.X509Certificates;
 using Fare;
+using Ex02.ConsoleUtils;
 
 namespace C20_Ex02
 {
@@ -219,7 +220,7 @@ namespace C20_Ex02
             // board1.Board[3, 0] = board1.Board[5, 0];
             
             GameBoard.PrintBoard(size,name, board1.Board);  // need to remove the name and find other solution
-            
+            //Ex02.ConsoleUtils.Screen.Clear();
             Player p1 = new Player(name);
 
             bool isMoveOk = false;
@@ -235,7 +236,6 @@ namespace C20_Ex02
             GameBoard.PrintBoard(size, name, board1.Board);
             string randomMove = ComputerMoves('H');
             Console.WriteLine(randomMove);
-            
             
         }
     }
