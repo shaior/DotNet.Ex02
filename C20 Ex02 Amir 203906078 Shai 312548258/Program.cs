@@ -184,6 +184,7 @@ namespace C20_Ex02
             bool forwardMoveIndicator = i_PlayerMove[1] == i_PlayerMove[3];
             bool sideMoveIndicator = i_PlayerMove[0] == i_PlayerMove[2];
             int diagonalMove = Math.Abs(i_PlayerMove[0] - i_PlayerMove[2]);
+            int diagonalAndSideMove = Math.Abs(i_PlayerMove[1] - i_PlayerMove[3]);
             string emptySlot = "   ";
             if (!isMoveEmpty)
             {
@@ -209,9 +210,13 @@ namespace C20_Ex02
                     isMoveEmpty = false;
                     Console.WriteLine("This slot is taken, try again! " + Environment.NewLine);
                 }
-                
+                else if(diagonalAndSideMove == 2 && diagonalMove != 2)
+                {
+                    Console.WriteLine("Move is illegal!, try again! " + Environment.NewLine);
+                }
                 else if (diagonalMove == 1 || isAbleToCapture)
                 {
+                    
                     isMoveEmpty = true;
                 }
                 else
@@ -231,22 +236,39 @@ namespace C20_Ex02
         public static bool CheckCapturePossibility(int[] i_PlayerMove, GameBoard i_Board, Player player)
         {
             bool checkIfAbleToCapture = false;
-            int firstIndexOfDiagonal;
-            int secondIndexOfDiagonal;
-            if (player.PawnType == GameBoard.k_PawnX)
+            int firstIndexOfDiagonal = 0;
+            int secondIndexOfDiagonal = 0;
+            bool leftDirection = (i_PlayerMove[1] > i_PlayerMove[3] == true);
+            bool rightDirection = (i_PlayerMove[1] < i_PlayerMove[3] == true);
+            
+            if (player.PawnType == GameBoard.k_PawnX && leftDirection)
             {
                 firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
                 secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
             }
+            else if (player.PawnType == GameBoard.k_PawnX && rightDirection)
+            {
+                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
+                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] + 1);
+            }
             // k_pawnO
-            else
+            else if(player.PawnType == GameBoard.k_PawnO && leftDirection)
             {
                 firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] + 1);
                 secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
             }
-            
-            
-            if (i_Board.Board[firstIndexOfDiagonal,secondIndexOfDiagonal] != GameBoard.k_EmptySlot && i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != player.PawnType)
+            else if (player.PawnType == GameBoard.k_PawnO && rightDirection)
+            {
+                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] + 1);
+                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] + 1);
+            }
+
+            if (i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] ==
+                i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal])
+            {
+                checkIfAbleToCapture = false;
+            }
+            else if (i_Board.Board[firstIndexOfDiagonal,secondIndexOfDiagonal] != GameBoard.k_EmptySlot && i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != player.PawnType)
             {
                 if (i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] == GameBoard.k_EmptySlot)
                 {
