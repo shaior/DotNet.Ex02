@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Security.Cryptography.X509Certificates;
 using Fare;
 using Ex02.ConsoleUtils;
+using System.Threading;
 
 namespace C20_Ex02
 {
@@ -17,7 +18,7 @@ namespace C20_Ex02
         {
             string boardSizeFromUser = string.Empty;
             int integerBoardSize = 0;
-            Console.WriteLine("Choose your game i_Board size.");
+            Console.WriteLine("Choose board size: ");
             Console.WriteLine("You can type 6 for (6x6), 8 for (8x8) or 10 for (10x10): ");
             bool boardSizeInputCheck = true;
             while (boardSizeInputCheck)
@@ -133,13 +134,13 @@ namespace C20_Ex02
             swapArrayIndexes(ref convertedIndexes);
             return convertedIndexes;
         }
-        public static string CheckInputByRegex(Regex userInputRegex)
+        public static string CheckInputByRegex(Regex userInputRegex )
         {
             string i_PlayerInput = string.Empty;
             bool isInputOk = false;
             while (!isInputOk)
             {
-                Console.WriteLine("Make Your Move (format: Gf>He): ");
+                Console.Write("Make Your Move (format: Gf>He): ");
                 i_PlayerInput = Console.ReadLine();
                 if (userInputRegex.IsMatch(i_PlayerInput))
                 {
@@ -177,7 +178,7 @@ namespace C20_Ex02
             return playerMove;
         }
         
-        public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard i_Board)
+        public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard i_Board, Player i_Player)
         {
             bool isMoveEmpty = false;
             bool forwardMoveIndicator = i_PlayerMove[1] == i_PlayerMove[3];
@@ -186,6 +187,7 @@ namespace C20_Ex02
             string emptySlot = "   ";
             if (!isMoveEmpty)
             {
+                bool isAbleToCapture = CheckCapturePossibility(i_PlayerMove, i_Board, i_Player);
 
                 if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
                 {
@@ -207,9 +209,14 @@ namespace C20_Ex02
                     isMoveEmpty = false;
                     Console.WriteLine("This slot is taken, try again! " + Environment.NewLine);
                 }
-                else if (diagonalMove == 1)
+                
+                else if (diagonalMove == 1 || isAbleToCapture)
                 {
                     isMoveEmpty = true;
+                }
+                else
+                {
+                    Console.WriteLine("Move is illegal!, try again! " + Environment.NewLine);
                 }
             }
             return isMoveEmpty;
@@ -221,33 +228,39 @@ namespace C20_Ex02
         /// </summary>
         /// <param name="i_PlayerMove"></param>
         /// <param name="i_Board"></param>
-        public static void CheckCapturePossibility(int[] i_PlayerMove,GameBoard i_Board)
+        public static bool CheckCapturePossibility(int[] i_PlayerMove, GameBoard i_Board, Player player)
         {
+            bool checkIfAbleToCapture = false;
+            int firstIndexOfDiagonal;
+            int secondIndexOfDiagonal;
+            if (player.PawnType == GameBoard.k_PawnX)
+            {
+                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
+                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
+            }
+            // k_pawnO
+            else
+            {
+                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] + 1);
+                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
+            }
             
+            
+            if (i_Board.Board[firstIndexOfDiagonal,secondIndexOfDiagonal] != GameBoard.k_EmptySlot && i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != player.PawnType)
+            {
+                if (i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] == GameBoard.k_EmptySlot)
+                {
+                    Console.WriteLine("Able to capture!");
+                    checkIfAbleToCapture = true;
+                }
+            }
+            return checkIfAbleToCapture;
         }
-
-        //public static void NewGame()
-        //{
-        //    Console.WriteLine("Welcome to The Checkers Game!");
-        //    string p1PlayerName = GetPlayerName();
-        //    Player p1 = new Player(p1PlayerName);
-        //    int boardSize = GetBoardSizeFromUser();
-        //    int withOrWithOutPartner = CheckHowManyPlayers();
-        //    if (withOrWithOutPartner == 1)
-        //    {
-        //        Console.WriteLine("Player 2:");
-        //        string p2PlayerName = GetPlayerName();
-        //        Player p2 = new Player(p2PlayerName);
-        //    }
-        //    GameBoard b = new GameBoard(boardSize);
-
-        //    //every print i_Board we will need to switch between the players names e.g Shai turn:
-        //    //GameBoard.PrintBoard(boardSize, p1PlayerName);
-        //}
+       
         public static void MakeMoves(int[] movesToMake, ref GameBoard board1)
         {
             board1.Board[movesToMake[2], movesToMake[3]] = board1.Board[movesToMake[0], movesToMake[1]];
-            board1.Board[movesToMake[0], movesToMake[1]] = "   ";
+            board1.Board[movesToMake[0], movesToMake[1]] = GameBoard.k_EmptySlot;
         }
 
         public static void tryGame()
@@ -257,24 +270,23 @@ namespace C20_Ex02
             {
                 int pawnO = 0;
                 int pawnX = 1;
+                Player p1 = new Player(GetPlayerName(), GameBoard.k_PawnO);
                 GameBoard board1 = new GameBoard(GetBoardSizeFromUser());
                 GameBoard.InitializeBoard(board1.BoardSize, board1.Board);
                 GameBoard.PrintBoard(board1.BoardSize, board1.Board);
-                
-                Player p1 = new Player(GetPlayerName(),pawnO);
                 string opponent;
                 Player p2 = null;
                 Player computerPlayer = null;
                 if (CheckHowManyPlayers() == 1)
                 {
                     Console.WriteLine("Player 2: ");
-                    p2 = new Player(GetPlayerName(),pawnX);
+                    p2 = new Player(GetPlayerName(),GameBoard.k_PawnX);
                     opponent = "Player2";
                 }
                 else
                 {
                     
-                    computerPlayer = new Player(computerPlayer.ComputerName, pawnX);
+                    computerPlayer = new Player(computerPlayer.ComputerName, GameBoard.k_PawnX);
                     opponent = "Computer";
                 }
 
@@ -284,15 +296,17 @@ namespace C20_Ex02
 
                     bool player1Turn = true;
                     bool isMoveOk = true;
+                    bool isAbleToCapture = false;
                     if (player1Turn)
                     {
+                        Console.WriteLine(string.Format("{0}'s turn (O): ", p1.PlayerName));
                         p1.PlayerMove = ConvertInputLettersToIndexes(GetPlayerMoves(board1.BoardSize));
-                        isMoveOk = CheckPlayerMove(p1.PlayerMove, board1);
+                        isMoveOk = CheckPlayerMove(p1.PlayerMove, board1, p1);
+
                         if (!isMoveOk)
                         {
                             continue;
                         }
-
                         MakeMoves(p1.PlayerMove, ref board1);
                         GameBoard.PrintBoard(board1.BoardSize, board1.Board);
                         player1Turn = false;
@@ -300,8 +314,9 @@ namespace C20_Ex02
                     }
                     if (opponent == "Player2")
                     {
+                        Console.WriteLine(string.Format("{0}'s turn (X): ", p2.PlayerName));
                         p2.PlayerMove = ConvertInputLettersToIndexes(GetPlayerMoves(board1.BoardSize));
-                        isMoveOk = CheckPlayerMove(p2.PlayerMove, board1);
+                        isMoveOk = CheckPlayerMove(p2.PlayerMove, board1, p2);
                         if (!isMoveOk)
                         {
                             continue;
@@ -315,41 +330,39 @@ namespace C20_Ex02
                         // TODO: NEED TO ADD COMPUTER RANDOM MOVES
                        // computerPlayer.PlayerMove = ConvertInputLettersToIndexes()
                     }
-
                 }
-
-               
-
-
             }
         }
 
+        
+
         public static void Main()
         {
+            tryGame();
             //NewGame();
-            string name = GetPlayerName();
-            int size = GetBoardSizeFromUser();
-            GameBoard board1 = new GameBoard(size);
-            GameBoard.InitializeBoard(size, board1.Board);
-            // board1.Board[3, 0] = board1.Board[5, 0];
-            
-            //GameBoard.PrintBoard(size,name, board1.Board);  // need to remove the name and find other solution
-            //Ex02.ConsoleUtils.Screen.Clear();
-            //Player p1 = new Player(name);
+            /*  string name = GetPlayerName();
+              int size = GetBoardSizeFromUser();
+              GameBoard board1 = new GameBoard(size);
+              GameBoard.InitializeBoard(size, board1.Board);
+              // board1.Board[3, 0] = board1.Board[5, 0];
 
-            bool isMoveOk = false;
-            //int[] movesToMake = { };
-            while (!isMoveOk)
-            {
-                string playerMove = GetPlayerMoves(size);
-                //p1.PlayerMove = ConvertInputLettersToIndexes(playerMove);
-                //isMoveOk = CheckPlayerMove(p1.PlayerMove, board1);
-            }
+              //GameBoard.PrintBoard(size,name, board1.Board);  // need to remove the name and find other solution
+              //Ex02.ConsoleUtils.Screen.Clear();
+              //Player p1 = new Player(name);
 
-            //MakeMoves(p1.PlayerMove, ref board1);
-            //GameBoard.PrintBoard(size, name, board1.Board);
-            string randomMove = ComputerMoves('H');
-            Console.WriteLine(randomMove);
+              bool isMoveOk = false;
+              //int[] movesToMake = { };
+              while (!isMoveOk)
+              {
+                  string playerMove = GetPlayerMoves(size);
+                  //p1.PlayerMove = ConvertInputLettersToIndexes(playerMove);
+                  //isMoveOk = CheckPlayerMove(p1.PlayerMove, board1);
+              }
+
+              //MakeMoves(p1.PlayerMove, ref board1);
+              //GameBoard.PrintBoard(size, name, board1.Board);
+              string randomMove = ComputerMoves('H');
+              Console.WriteLine(randomMove);*/
 
         }
     }

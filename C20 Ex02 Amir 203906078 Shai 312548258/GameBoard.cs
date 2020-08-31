@@ -13,6 +13,7 @@ namespace C20_Ex02
         private string[,] m_Board;
         public const string k_PawnO = " O ";
         public const string k_PawnX = " X ";
+        public const string k_EmptySlot = "   ";
 
         public GameBoard(int i_BoardSize)
         {
@@ -87,7 +88,6 @@ namespace C20_Ex02
 
             }
         }
-
         public static void PrintLettersOnTop(int i_BoardSize)
         {
             char stopLetterPrinting;
@@ -134,19 +134,6 @@ namespace C20_Ex02
                 startLetterPrinting++;
             }
         }
-
-      /*  public static void PrintBoardCurrentState(string[,] board)
-        {
-            for (int i = 0; i < board.Length; i++)
-            {
-                for (int j = 0; j < board.Length; j++)
-                {
-                    Console.Write(string.Format("|{0} ", board[i, j]));
-                }
-                Console.Write(Environment.NewLine + Environment.NewLine);
-            }*/
-
-        
         /// <summary>
         /// This method prints the game board.
         /// </summary>
@@ -157,16 +144,7 @@ namespace C20_Ex02
             PrintLettersOnTop(i_BoardSize);
             char startLetterPrinting = 'a';
             for (int i = 0; i < i_BoardSize; i++)
-            {
-         /*       if (i == (i_BoardSize / 2) + 1)
-                {
-                    pawnType = k_PawnX;
-                }
-                else if (i == (i_BoardSize / 2) - 1 || i == (i_BoardSize / 2))
-                {
-                    pawnType = "   ";
-                }*/
-
+            {   
                 printRowsSeparator(i_BoardSize);
                 PrintLetterOnSide(i_BoardSize,ref startLetterPrinting);
                 for (int j = 0; j < i_BoardSize; j++)
