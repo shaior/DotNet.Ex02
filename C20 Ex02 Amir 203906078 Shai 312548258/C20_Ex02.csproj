@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameBoard.cs" />
-    <Compile Include="Pawn.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
