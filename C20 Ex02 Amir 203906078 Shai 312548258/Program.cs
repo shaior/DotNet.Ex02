@@ -194,7 +194,7 @@ namespace C20_Ex02
                     continue;
                 }
 
-                // TODO: NEED TO ADD QUIT GAME STATEMENT(IF USER PRESS "Q")
+
             }
 
             return i_PlayerInput;
@@ -402,7 +402,7 @@ namespace C20_Ex02
                     break;
                 }
 
-                
+
                 i_Player.PlayerMove = ConvertInputLettersToIndexes(playerMoves);
                 isMoveOk = CheckPlayerMove(i_Player.PlayerMove, i_Board, i_Player);
                 if (!isMoveOk)
@@ -412,7 +412,7 @@ namespace C20_Ex02
 
                 MakeMoves(i_Player.PlayerMove, ref i_Board);
                 GameBoard.PrintBoard(i_Board.BoardSize, i_Board.Board);
-                Console.WriteLine(string.Format("{0}'s move was: {1}",i_Player.PlayerName, playerMoves));
+                Console.WriteLine(string.Format("{0}'s move was: {1}", i_Player.PlayerName, playerMoves));
                 playerTurn = false;
             }
 
@@ -435,14 +435,14 @@ namespace C20_Ex02
         public static void tryGame()
         {
             Console.WriteLine("Welcome to Checkers game!");
-            string playerMoves = string.Empty;
+            // string playerMoves = string.Empty;
             string pawnO = ((char)Pawn.ePawns.O).ToString();
             string pawnX = ((char)Pawn.ePawns.X).ToString();
             bool continueGame = true;
             while (continueGame)
             {
 
-                Player p1 = new Player(GetPlayerName(), GameBoard.k_PawnO);
+                Player p1 = new Player(GetPlayerName(), pawnO);
                 GameBoard board1 = new GameBoard(GetBoardSizeFromUser());
                 GameBoard.InitializeBoard(board1.BoardSize, board1.Board);
                 GameBoard.PrintBoard(board1.BoardSize, board1.Board);
