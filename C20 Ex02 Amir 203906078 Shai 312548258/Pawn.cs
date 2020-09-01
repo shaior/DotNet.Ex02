@@ -30,7 +30,6 @@ namespace C20_Ex02
             X = 'X',
             O = 'O',
 
-
         }
 
     }
