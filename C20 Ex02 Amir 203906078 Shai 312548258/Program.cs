@@ -30,8 +30,10 @@ namespace C20_Ex02
                     Console.WriteLine("Wrong size. Please choose 6, 8 or 10.");
                     continue;
                 }
+
                 boardSizeInputCheck = false;
             }
+
             return integerBoardSize;
         }
 
@@ -41,9 +43,10 @@ namespace C20_Ex02
             string resultGamePartner = string.Empty;
             while (checkAgainHowManyPlayers)
             {
-                string vsFriendOrVsComputer = string.Format("Are you going to play against a friend, or against the computer?" + Environment.NewLine +
-               "against a friend - type 1" + Environment.NewLine +
-               "against the computer - type 0" + Environment.NewLine);
+                string vsFriendOrVsComputer = string.Format(
+                    "Are you going to play against a friend, or against the computer?" + Environment.NewLine +
+                    "against a friend - type 1" + Environment.NewLine +
+                    "against the computer - type 0" + Environment.NewLine);
                 Console.WriteLine(vsFriendOrVsComputer);
 
                 resultGamePartner = Console.ReadLine();
@@ -58,7 +61,8 @@ namespace C20_Ex02
                     }
                     else
                     {
-                        string valueError = string.Format("Wrong value was inserted, please try again!" + Environment.NewLine);
+                        string valueError =
+                            string.Format("Wrong value was inserted, please try again!" + Environment.NewLine);
                         Console.WriteLine(valueError);
                         continue;
                     }
@@ -71,6 +75,7 @@ namespace C20_Ex02
                 }
 
             }
+
             return int.Parse(resultGamePartner);
         }
 
@@ -98,6 +103,7 @@ namespace C20_Ex02
                     checkUserName = false;
                 }
             }
+
             return userName;
         }
 
@@ -125,12 +131,13 @@ namespace C20_Ex02
             char thirdLetter = (char)rnd.Next('A', i_stoppingLetter);
             char FourthLetter = (char)rnd.Next('A', i_stoppingLetter);
             computerMove = computerMove + firstLetter.ToString().ToUpper()
-                            + secondLetter.ToString().ToLower() + '>'
-                            + thirdLetter.ToString().ToUpper()
-                            + FourthLetter.ToString().ToLower();
+                                        + secondLetter.ToString().ToLower() + '>'
+                                        + thirdLetter.ToString().ToUpper()
+                                        + FourthLetter.ToString().ToLower();
 
             return computerMove;
         }
+
         public static void swapArrayIndexes(ref int[] i_Array)
         {
             int firstIndexHolder = i_Array[1];
@@ -140,6 +147,7 @@ namespace C20_Ex02
             i_Array[3] = i_Array[2];
             i_Array[2] = secondIndexHolder;
         }
+
         public static int[] ConvertInputLettersToIndexes(string i_PlayerInput)
         {
             int numberOfIndexes = 4;
@@ -157,24 +165,26 @@ namespace C20_Ex02
                     j++;
                 }
             }
+
             swapArrayIndexes(ref convertedIndexes);
             return convertedIndexes;
         }
+
         public static string CheckInputByRegex(Regex userInputRegex)
         {
             string i_PlayerInput = string.Empty;
             bool isInputOk = false;
             while (!isInputOk)
             {
-                Console.Write("Make Your Move (format: Gf>He), press Q to quit the game: ");
+                Console.Write("Make Your Move (format: Gf>He) (or press Q to quit the game): ");
                 i_PlayerInput = Console.ReadLine();
                 if (userInputRegex.IsMatch(i_PlayerInput))
                 {
-                    //Console.WriteLine("input is ok");
+
                     isInputOk = true;
                     break;
                 }
-                else if (i_PlayerInput == "Q")
+                else if (i_PlayerInput.ToUpper() == "Q")
                 {
                     break;
                 }
@@ -183,10 +193,13 @@ namespace C20_Ex02
                     Console.WriteLine("input is not ok, try again!");
                     continue;
                 }
+
                 // TODO: NEED TO ADD QUIT GAME STATEMENT(IF USER PRESS "Q")
             }
+
             return i_PlayerInput;
         }
+
         public static string GetPlayerMoves(int i_BoardSize)
         {
             string playerMove = string.Empty;
@@ -205,6 +218,7 @@ namespace C20_Ex02
                 Regex userInputRegex = new Regex(@"^[A-Y][a-y]>[A-Y[a-y]");
                 playerMove = CheckInputByRegex(userInputRegex);
             }
+
             return playerMove;
         }
 
@@ -254,6 +268,7 @@ namespace C20_Ex02
                     Console.WriteLine("Move is illegal!, try again! " + Environment.NewLine);
                 }
             }
+
             return isMoveEmpty;
 
         }
@@ -298,7 +313,8 @@ namespace C20_Ex02
             {
                 checkIfAbleToCapture = false;
             }
-            else if (i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != GameBoard.k_EmptySlot && i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != player.PawnType)
+            else if (i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != GameBoard.k_EmptySlot &&
+                     i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != player.PawnType)
             {
                 if (i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] == GameBoard.k_EmptySlot)
                 {
@@ -308,6 +324,7 @@ namespace C20_Ex02
                     checkIfAbleToCapture = true;
                 }
             }
+
             return checkIfAbleToCapture;
         }
 
@@ -317,135 +334,157 @@ namespace C20_Ex02
             board1.Board[movesToMake[0], movesToMake[1]] = GameBoard.k_EmptySlot;
         }
 
-        public static void ShowGameResults(Player p1, Player p2)
+        public static void ShowGameResults(Player i_Player1, Player i_Opponent)
         {
 
-            Console.WriteLine(string.Format("{0}'s score: {1} ", p1.PlayerName, p1.PlayerScore));
-            Console.WriteLine(string.Format("{0}'s score: {1} ", p2.PlayerName, p2.PlayerScore));
-            if (p1.PlayerScore > p2.PlayerScore)
+            Console.WriteLine(string.Format("{0}'s score: {1} ", i_Player1.PlayerName, i_Player1.PlayerScore));
+            Console.WriteLine(string.Format("{0}'s score: {1} ", i_Opponent.PlayerName, i_Opponent.PlayerScore));
+            if (i_Player1.PlayerScore > i_Opponent.PlayerScore)
             {
-                Console.WriteLine(string.Format("{0} is the winner!", p1.PlayerName));
+                Console.WriteLine(string.Format("{0} is the winner!", i_Player1.PlayerName));
             }
-            else if (p1.PlayerScore < p2.PlayerScore)
+            else if (i_Player1.PlayerScore < i_Opponent.PlayerScore)
             {
-                Console.WriteLine(string.Format("{0} is the winner!", p2.PlayerName));
+                Console.WriteLine(string.Format("{0} is the winner!", i_Opponent.PlayerName));
             }
             // even
             else
             {
                 Console.WriteLine(string.Format("There is a tie!"));
             }
+
+
         }
+
+        public static Player ChooseOpponent(string pawnX)
+        {
+            Player opponent;
+
+            if (CheckHowManyPlayers() == 1)
+            {
+                Console.WriteLine("Player 2: ");
+                opponent = new Player(GetPlayerName(), pawnX);
+
+            }
+            else
+            {
+
+                opponent = new Player(Player.r_ComputerName, pawnX);
+
+            }
+
+            return opponent;
+        }
+
+        public static bool PlayTurn(Player i_Player, GameBoard i_Board)
+        {
+
+            bool playerTurn = true;
+            string playerMoves;
+            bool continueGame = true;
+            while (playerTurn)
+            {
+                bool isMoveOk = true;
+                Console.WriteLine(string.Format("{0}'s turn ({1}): ", i_Player.PlayerName, i_Player.PawnType));
+                if (i_Player.PlayerName == Player.r_ComputerName)
+                {
+                    playerMoves = GetComputerMoves(i_Board.BoardSize);
+                }
+                else
+                {
+                    playerMoves = GetPlayerMoves(i_Board.BoardSize);
+                }
+
+                if (playerMoves.ToUpper() == "Q")
+                {
+                    //ShowGameResults(i_Player, opponent);
+                    continueGame = false;
+                    break;
+                }
+
+                i_Player.PlayerMove = ConvertInputLettersToIndexes(playerMoves);
+                isMoveOk = CheckPlayerMove(i_Player.PlayerMove, i_Board, i_Player);
+                if (!isMoveOk)
+                {
+                    continue;
+                }
+
+                MakeMoves(i_Player.PlayerMove, ref i_Board);
+                GameBoard.PrintBoard(i_Board.BoardSize, i_Board.Board);
+                playerTurn = false;
+            }
+
+            return continueGame;
+        }
+
+        public static bool CheckIfUserQuitGame(bool i_continueGame)
+        {
+            bool quitGame = false;
+            if (!i_continueGame)
+            {
+                Console.WriteLine("statistic");
+                quitGame = true;
+
+            }
+
+            return quitGame;
+        }
+
         public static void tryGame()
         {
             Console.WriteLine("Welcome to Checkers game!");
             string playerMoves = string.Empty;
-            while (playerMoves != "Q")
+            string pawnO = ((char)Pawn.ePawns.O).ToString();
+            string pawnX = ((char)Pawn.ePawns.X).ToString();
+            while (playerMoves != "Q".ToUpper())
             {
-                int pawnO = 0;
-                int pawnX = 1;
+
                 Player p1 = new Player(GetPlayerName(), GameBoard.k_PawnO);
                 GameBoard board1 = new GameBoard(GetBoardSizeFromUser());
                 GameBoard.InitializeBoard(board1.BoardSize, board1.Board);
                 GameBoard.PrintBoard(board1.BoardSize, board1.Board);
-                string opponent;
-                string computerName = "CheckersMaster";
-
-                Player p2 = null;
-                Player computerPlayer = null;
-                if (CheckHowManyPlayers() == 1)
-                {
-                    Console.WriteLine("Player 2: ");
-                    p2 = new Player(GetPlayerName(), GameBoard.k_PawnX);
-                    opponent = "Player2";
-                }
-                else
-                {
-
-                    computerPlayer = new Player(computerName, GameBoard.k_PawnX);
-                    opponent = "Computer";
-                }
+                //string computerName = "CheckersMaster";
+                Player opponent = ChooseOpponent(pawnX);
 
                 bool playing = true;
+                bool player1Turn = true;
                 while (playing)
                 {
-
-                    bool player1Turn = true;
                     bool isMoveOk = true;
                     bool isAbleToCapture = false;
+                    bool continueGame = true;
                     if (player1Turn)
                     {
-                        Console.WriteLine(string.Format("{0}'s turn (O): ", p1.PlayerName));
-                        playerMoves = GetPlayerMoves(board1.BoardSize);
-                        if (playerMoves == "Q")
-                        {
-                            ShowGameResults(p1, p2);
-                            break;
-                        }
-                        p1.PlayerMove = ConvertInputLettersToIndexes(playerMoves);
-                        isMoveOk = CheckPlayerMove(p1.PlayerMove, board1, p1);
-
-                        if (!isMoveOk)
-                        {
-                            continue;
-                        }
-                        MakeMoves(p1.PlayerMove, ref board1);
-                        GameBoard.PrintBoard(board1.BoardSize, board1.Board);
+                        continueGame = PlayTurn(p1, board1);
                         player1Turn = false;
-
-                    }
-                    if (opponent == "Player2")
-                    {
-                        Console.WriteLine(string.Format("{0}'s turn (X): ", p2.PlayerName));
-                        playerMoves = GetPlayerMoves(board1.BoardSize);
-                        if (playerMoves == "Q")
+                        if (CheckIfUserQuitGame(continueGame))
                         {
-                            ShowGameResults(p1,p2);
                             break;
                         }
-                        p2.PlayerMove = ConvertInputLettersToIndexes(playerMoves);
-                        isMoveOk = CheckPlayerMove(p2.PlayerMove, board1, p2);
-                        if (!isMoveOk)
-                        {
-                            continue;
-                        }
-                        MakeMoves(p2.PlayerMove, ref board1);
-                        GameBoard.PrintBoard(board1.BoardSize, board1.Board);
-                        player1Turn = true;
                     }
                     else
                     {
-                        Console.WriteLine(string.Format("{0}'s turn (X): ", computerName));
-                        string i_computerMoves = GetComputerMoves(board1.BoardSize);
-
-                        computerPlayer.PlayerMove = ConvertInputLettersToIndexes(i_computerMoves);
-                        isMoveOk = false;
-                        while (!isMoveOk)
-                        {
-                            i_computerMoves = GetComputerMoves(board1.BoardSize);
-
-                            computerPlayer.PlayerMove = ConvertInputLettersToIndexes(i_computerMoves);
-
-                            isMoveOk = CheckPlayerMove(computerPlayer.PlayerMove, board1, computerPlayer);
-                            if (isMoveOk)
-                            {
-                                break;
-                            }
-                        }
-                        MakeMoves(computerPlayer.PlayerMove, ref board1);
-                        GameBoard.PrintBoard(board1.BoardSize, board1.Board);
+                        PlayTurn(opponent, board1);
                         player1Turn = true;
+                        if (CheckIfUserQuitGame(continueGame))
+                        {
+                            break;
+                        }
                     }
                 }
+
             }
         }
+
+
         public static void Main()
         {
 
             tryGame();
-            
+            //Console.WriteLine(((char)Pawn.ePawns.KingX).ToString());
         }
     }
+
 }
 
-        
+

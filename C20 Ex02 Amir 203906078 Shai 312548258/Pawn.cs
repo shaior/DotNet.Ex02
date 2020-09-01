@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace C20_Ex02_Amir_203906078_Shai_312548258
+namespace C20_Ex02
 {
-    class Pawn
+    public class Pawn
     {
         private string m_PlayerPawnType;
 
         public Pawn(string i_PlayerPawn)
         {
+            
             this.m_PlayerPawnType = i_PlayerPawn;
         }
         public string PawnType
@@ -20,6 +21,16 @@ namespace C20_Ex02_Amir_203906078_Shai_312548258
             {
                 return m_PlayerPawnType;
             }
+        }
+
+        public enum ePawns
+        {
+            KingX = 'K',
+            KingO = 'U',
+            X = 'X',
+            O = 'O',
+
+
         }
 
     }

@@ -48,12 +48,13 @@ namespace C20_Ex02
 
         public static void InitializeBoard(int i_BoardSize , string[,] board)
         {
-            string pawnType = k_PawnO;
+            string pawnType = string.Format(" {0} ", ((char)Pawn.ePawns.O).ToString());
+            //string pawnType = k_PawnO;
             for (int i = 0; i < i_BoardSize; i++)
             {
                 if (i == (i_BoardSize / 2) + 1)
                 {
-                    pawnType = k_PawnX;
+                    pawnType = string.Format(" {0} ", ((char)Pawn.ePawns.X).ToString());
                 }
                 else if (i == (i_BoardSize / 2) - 1 || i == (i_BoardSize / 2))
                 {
