@@ -402,6 +402,7 @@ namespace C20_Ex02
                     break;
                 }
 
+                
                 i_Player.PlayerMove = ConvertInputLettersToIndexes(playerMoves);
                 isMoveOk = CheckPlayerMove(i_Player.PlayerMove, i_Board, i_Player);
                 if (!isMoveOk)
@@ -411,6 +412,7 @@ namespace C20_Ex02
 
                 MakeMoves(i_Player.PlayerMove, ref i_Board);
                 GameBoard.PrintBoard(i_Board.BoardSize, i_Board.Board);
+                Console.WriteLine(string.Format("{0}'s move was: {1}",i_Player.PlayerName, playerMoves));
                 playerTurn = false;
             }
 
