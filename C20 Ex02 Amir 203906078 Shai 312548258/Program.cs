@@ -436,7 +436,8 @@ namespace C20_Ex02
             string playerMoves = string.Empty;
             string pawnO = ((char)Pawn.ePawns.O).ToString();
             string pawnX = ((char)Pawn.ePawns.X).ToString();
-            while (playerMoves != "Q".ToUpper())
+            bool continueGame = true;
+            while (continueGame)
             {
 
                 Player p1 = new Player(GetPlayerName(), GameBoard.k_PawnO);
@@ -452,7 +453,6 @@ namespace C20_Ex02
                 {
                     bool isMoveOk = true;
                     bool isAbleToCapture = false;
-                    bool continueGame = true;
                     if (player1Turn)
                     {
                         continueGame = PlayTurn(p1, board1);
