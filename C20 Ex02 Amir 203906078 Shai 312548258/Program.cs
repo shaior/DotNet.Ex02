@@ -481,7 +481,7 @@ namespace C20_Ex02
         {
 
             tryGame();
-            Console.WriteLine(((char)Pawn.ePawns.KingX).ToString());
+            //Console.WriteLine(((char)Pawn.ePawns.KingX).ToString());
         }
     }
 
