@@ -9,17 +9,21 @@ namespace C20_Ex02
 
     public class Player
     {
-        //private readonly ePawnType m_PlayerPawn;
+
+        public static readonly string r_ComputerName = "ChckersMaster";
         private string m_PlayerName;
         private string m_PlayerNumber;
         private int[] m_PlayerMove;
-        private string m_ComputerName;
         private int m_PlayerScore = 0;
+        private string m_PawnType;
+        
 
         public Player(string i_PlayerName , string i_pawnType)
         {
             this.m_PlayerName = i_PlayerName;
+            this.m_PawnType = i_pawnType;
         }
+
         public int PlayerScore
         {
             get
@@ -31,8 +35,15 @@ namespace C20_Ex02
                 m_PlayerScore = value;
             }
         }
+        public string PawnType
+        {
+            get
+            {
+                return m_PawnType;
+            }
+          
+        }
 
-       
         public string PlayerNumber
         {
             get
@@ -66,14 +77,7 @@ namespace C20_Ex02
                 m_PlayerMove = value;
             }
         }
-     /*   public string ComputerName
-        {
-            get
-            {
-                return m_ComputerName;
-            }
-
-        }*/
+        
 
       /*  public enum ePawnType
         {
