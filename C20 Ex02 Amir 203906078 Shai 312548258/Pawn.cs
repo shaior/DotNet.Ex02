@@ -29,8 +29,6 @@ namespace C20_Ex02
             KingO = 'U',
             X = 'X',
             O = 'O',
-
-
         }
 
     }
