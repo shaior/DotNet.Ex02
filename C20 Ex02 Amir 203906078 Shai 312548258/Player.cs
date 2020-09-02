@@ -14,12 +14,16 @@
         private int[] m_PlayerMove;
         private int m_PlayerScore = 0;
         private string m_PawnType;
+        private string m_CapturedPawn;
+        private bool m_IsAbleToCapture = false;
+
         public Player(string i_PlayerName , string i_pawnType)
         {
             this.m_PlayerName = i_PlayerName;
             this.m_PawnType = i_pawnType;
         }
 
+        
         public int PlayerScore
         {
             get
@@ -77,6 +81,30 @@
             set
             {
                 m_PlayerMove = value;
+            }
+        }
+        public string CapturedPawn
+        {
+            get
+            {
+                return m_CapturedPawn;
+            }
+
+            set
+            {
+                m_CapturedPawn = value;
+            }
+        }
+        public bool IsAbleToCapture
+        {
+            get
+            {
+                return m_IsAbleToCapture;
+            }
+
+            set
+            {
+                m_IsAbleToCapture = value;
             }
         }
     }
