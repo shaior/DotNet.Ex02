@@ -77,7 +77,7 @@
         }
 
         /// <summary>
-        /// 
+        /// getting player name.
         /// </summary>
         /// <returns>string player name</returns>
         public static string GetPlayerName()
@@ -111,7 +111,7 @@
         /// <summary>
         /// generate computer moves.
         /// </summary>
-        /// <param name="i_BoardSize"></param>
+        /// <param name="i_BoardSize"> size of board.</param>
         /// <returns>string computer moves.</returns>
         public static string GetComputerMoves(int i_BoardSize)
         {
@@ -145,7 +145,7 @@
         /// <summary>
         /// swap the array indexes.
         /// </summary>
-        /// <param name="i_Array"></param>
+        /// <param name="i_Array"> gets array to swap.</param>
         public static void swapArrayIndexes(ref int[] i_Array)
         {
             int firstIndexHolder = i_Array[1];
@@ -157,9 +157,9 @@
         }
 
         /// <summary>
-        /// 
+        /// convert the player input to indexes.
         /// </summary>
-        /// <param name="i_PlayerInput"></param>
+        /// <param name="i_PlayerInput"> the input of the player.</param>
         /// <returns>int array of indexes.</returns>
         public static int[] ConvertInputLettersToIndexes(string i_PlayerInput)
         {
@@ -178,14 +178,15 @@
                     j++;
                 }
             }
+
             swapArrayIndexes(ref convertedIndexes);
             return convertedIndexes;
         }
 
         /// <summary>
-        /// 
+        /// check input by regex.
         /// </summary>
-        /// <param name="userInputRegex"></param>
+        /// <param name="userInputRegex"> relevant regex.</param>
         /// <returns>gets and check the user input by regex.</returns>
         public static string CheckInputByRegex(Regex userInputRegex)
         {
@@ -217,7 +218,7 @@
         /// <summary>
         /// gets player move.
         /// </summary>
-        /// <param name="i_BoardSize"></param>
+        /// <param name="i_BoardSize">size of board.</param>
         /// <returns>string player move.</returns>
         public static string GetPlayerMoves(int i_BoardSize)
         {
@@ -244,9 +245,9 @@
         /// <summary>
         /// Checks player move.
         /// </summary>
-        /// <param name="i_PlayerMove"></param>
-        /// <param name="i_Board"></param>
-        /// <param name="i_Player"></param>
+        /// <param name="i_PlayerMove"> array of player moves.</param>
+        /// <param name="i_Board">board.</param>
+        /// <param name="i_Player">player.</param>
         /// <returns> true if player move is ok.</returns>
         public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard i_Board, Player i_Player)
         {
@@ -314,8 +315,8 @@
         /// <summary>
         /// check if pawn is king.
         /// </summary>
-        /// <param name="i_playerMove"></param>
-        /// <param name="i_Board"></param>
+        /// <param name="i_playerMove"> array of player moves.</param>
+        /// <param name="i_Board">board.</param>
         /// <returns>bool if current pawn is king.</returns>
         public static bool CheckIfCurrentPawnIsKing(int[] i_playerMove , GameBoard i_Board)
         {
@@ -329,6 +330,13 @@
             return isKing;
         }
 
+        /// <summary>
+        /// checks the computer moves.
+        /// </summary>
+        /// <param name="i_PlayerMove">array of moves.</param>
+        /// <param name="i_Board">board.</param>
+        /// <param name="i_Player">player.</param>
+        /// <returns>bool if moves are ok.</returns>
         public static bool CheckComputerMove(int[] i_PlayerMove, GameBoard i_Board, Player i_Player)
         {
             bool isMoveOk = false;
@@ -350,7 +358,6 @@
                 else
                 {
                     bool isAbleToCapture = CheckCapturePossibility(i_PlayerMove, i_Board, i_Player);
-
                     if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
                     {
                         isMoveOk = false;
@@ -378,15 +385,16 @@
                     }
                 }
             }
+
             return isMoveOk;
         }
          
         /// <summary>
-        /// 
+        /// checks the capture possiblity.
         /// </summary>
-        /// <param name="i_PlayerMove"></param>
-        /// <param name="i_Board"></param>
-        /// <param name="player"></param>
+        /// <param name="i_PlayerMove">array of moves.</param>
+        /// <param name="i_Board">board.</param>
+        /// <param name="player">layer.</param>
         /// <returns>bool true if capture is true. </returns>
         public static bool CheckCapturePossibility(int[] i_PlayerMove, GameBoard i_Board, Player player)
         {
@@ -408,6 +416,7 @@
                 firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
                 secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] + 1);
             }
+
             // k_pawnO
             else if (player.PawnType == pawnO && leftDirectionForward)
             {
@@ -443,14 +452,19 @@
         /// <summary>
         /// make moves.
         /// </summary>
-        /// <param name="i_MovesToMake"></param>
-        /// <param name="i_Board1"></param>
+        /// <param name="i_MovesToMake">moves to make array </param>
+        /// <param name="i_Board1">ref to board.</param>
         public static void MakeMoves(int[] i_MovesToMake, ref GameBoard i_Board1)
         {
             i_Board1.Board[i_MovesToMake[2], i_MovesToMake[3]] = i_Board1.Board[i_MovesToMake[0], i_MovesToMake[1]];
             i_Board1.Board[i_MovesToMake[0], i_MovesToMake[1]] = GameBoard.k_EmptySlot;
         }
 
+        /// <summary>
+        /// show game results.
+        /// </summary>
+        /// <param name="i_Player1">player.</param>
+        /// <param name="i_Opponent">opponenet.</param>
         public static void ShowGameResults(Player i_Player1, Player i_Opponent)
         {
             Console.WriteLine(string.Format("{0}'s score: {1} ", i_Player1.PlayerName, i_Player1.PlayerScore));
@@ -473,7 +487,7 @@
         /// <summary>
         /// choose opponent.
         /// </summary>
-        /// <param name="pawnX"></param>
+        /// <param name="pawnX"> opponent will always be X.</param>
         /// <returns>player object.</returns>
         public static Player ChooseOpponent(string pawnX)
         {
@@ -490,6 +504,13 @@
 
             return opponent;
         }
+
+        /// <summary>
+        /// play turn.
+        /// </summary>
+        /// <param name="i_Player">player to play.</param>
+        /// <param name="i_Board">board.</param>
+        /// <returns>bool.</returns>
         public static bool PlayTurn(Player i_Player, GameBoard i_Board)
         {
             bool playerTurn = true;
@@ -531,6 +552,7 @@
                     {
                         MakeKing(ref i_Board,i_Player);
                     }
+
                     GameBoard.PrintBoard(i_Board.BoardSize, i_Board.Board);
                     Console.WriteLine(string.Format("{0}'s move was: {1}", i_Player.PlayerName, playerMoves));
                     playerTurn = false;
@@ -543,8 +565,8 @@
         /// <summary>
         /// makes king.
         /// </summary>
-        /// <param name="io_Board"></param>
-        /// <param name="i_Player"></param>
+        /// <param name="io_Board">board.</param>
+        /// <param name="i_Player">player.</param>
 
         public static void MakeKing(ref GameBoard io_Board, Player i_Player)
         {
@@ -561,6 +583,13 @@
             }
         }
 
+        /// <summary>
+        /// checks if user quit the game.
+        /// </summary>
+        /// <param name="i_continueGame">continue?</param>
+        /// <param name="i_Player1">player.</param>
+        /// <param name="i_Player2">player.</param>
+        /// <returns>true if quit game.</returns>
         public static bool CheckIfUserQuitGame(bool i_continueGame, Player i_Player1, Player i_Player2)
         {
             bool quitGame = false;
@@ -573,6 +602,9 @@
             return quitGame;
         }
 
+        /// <summary>
+        /// try game.
+        /// </summary>
         public static void tryGame()
         {
             Console.WriteLine("Welcome to Checkers game!");
@@ -614,11 +646,12 @@
             }
         }
 
+        /// <summary>
+        /// Main.
+        /// </summary>
         public static void Main()
         {
-
             tryGame();
-            //Console.WriteLine(((char)Pawn.ePawns.KingX).ToString());
         }
     }
 }

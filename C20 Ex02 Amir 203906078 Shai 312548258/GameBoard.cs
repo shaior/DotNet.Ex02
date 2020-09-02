@@ -11,7 +11,6 @@
         public const string k_EmptySlot = "   ";
         private int m_BoardSize = 0;
         private string[,] m_Board;
-    
         public GameBoard(int i_BoardSize)
         {
             this.m_BoardSize = i_BoardSize;
@@ -115,8 +114,8 @@
         /// <summary>
         /// prints letters on side.
         /// </summary>
-        /// <param name="i_BoardSize"></param>
-        /// <param name="startLetterPrinting"></param>
+        /// <param name="i_BoardSize">size of board.</param>
+        /// <param name="startLetterPrinting">start letter printing.</param>
         public static void PrintLetterOnSide(int i_BoardSize, ref char startLetterPrinting)
         {
             char stopLetterPrinting;
@@ -182,6 +181,7 @@
                 Console.Write(string.Format("|"));
                 Console.Write(Environment.NewLine);
             }
+
             printRowsSeparator(i_BoardSize);
         }
 

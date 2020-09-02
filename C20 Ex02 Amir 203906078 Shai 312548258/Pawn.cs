@@ -60,10 +60,10 @@
         }
 
         /// <summary>
-        /// Checks king oppotuirnity
+        /// Checks king opportunity.
         /// </summary>
-        /// <param name="i_Board"></param>
-        /// <param name="i_Player"></param>
+        /// <param name="i_Board"> board.</param>
+        /// <param name="i_Player">player.</param>
         /// <returns> bool true if yes or false if not.</returns>
         public static bool CheckKingOpportunity(GameBoard i_Board, Player i_Player)
         {

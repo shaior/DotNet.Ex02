@@ -8,14 +8,12 @@
 
     public class Player
     {
-
         public static readonly string r_ComputerName = "ChckersMaster";
         private string m_PlayerName;
         private string m_PlayerNumber;
         private int[] m_PlayerMove;
         private int m_PlayerScore = 0;
         private string m_PawnType;
-        
         public Player(string i_PlayerName , string i_pawnType)
         {
             this.m_PlayerName = i_PlayerName;
@@ -28,18 +26,19 @@
             {
                 return m_PlayerScore;
             }
+
             set
             {
                 m_PlayerScore = value;
             }
         }
+
         public string PawnType
         {
             get
             {
                 return m_PawnType;
             }
-          
         }
 
         public string PlayerNumber
@@ -48,28 +47,33 @@
             {
                 return m_PlayerNumber;
             }
+
             set
             {
                 m_PlayerNumber = value;
             }
         }
+
         public string PlayerName
         {
             get
             {
                 return m_PlayerName;
             }
+
             set
             {
                 m_PlayerName = value;
             }
         }
+
         public int[] PlayerMove
         {
             get
             {
                 return m_PlayerMove;
             }
+
             set
             {
                 m_PlayerMove = value;
