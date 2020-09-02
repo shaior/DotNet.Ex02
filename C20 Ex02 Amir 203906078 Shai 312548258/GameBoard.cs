@@ -1,24 +1,20 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace C20_Ex02
+﻿namespace C20_Ex02
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     public class GameBoard
     {
+        public const string k_EmptySlot = "   ";
         private int m_BoardSize = 0;
         private string[,] m_Board;
-        //public const string k_PawnO = " O ";
-        //public const string k_PawnX = " X ";
-        public const string k_EmptySlot = "   ";
-
         public GameBoard(int i_BoardSize)
         {
             this.m_BoardSize = i_BoardSize;
-            this.m_Board = new string[this.m_BoardSize,this.m_BoardSize];
+            this.m_Board = new string[this.m_BoardSize, this.m_BoardSize];
         }
 
         public int BoardSize
@@ -33,6 +29,7 @@ namespace C20_Ex02
                 m_BoardSize = value;
             }
         }
+
         public string[,] Board
         {
             get
@@ -87,9 +84,9 @@ namespace C20_Ex02
                         }
                     }
                 }
-
             }
         }
+
         public static void PrintLettersOnTop(int i_BoardSize)
         {
             char stopLetterPrinting;
@@ -114,7 +111,12 @@ namespace C20_Ex02
             Console.Write(Environment.NewLine); // TODO: combine printletters method to one method.(its similar)
         }
 
-        public static void PrintLetterOnSide(int i_BoardSize,ref char startLetterPrinting)
+        /// <summary>
+        /// prints letters on side.
+        /// </summary>
+        /// <param name="i_BoardSize">size of board.</param>
+        /// <param name="startLetterPrinting">start letter printing.</param>
+        public static void PrintLetterOnSide(int i_BoardSize, ref char startLetterPrinting)
         {
             char stopLetterPrinting;
             if (i_BoardSize == (int)eBoardSize.SixBySix)
@@ -132,23 +134,23 @@ namespace C20_Ex02
 
             if (startLetterPrinting <= stopLetterPrinting)
             {
-                Console.Write(string.Format("{0}",startLetterPrinting));
+                Console.Write(string.Format("{0}", startLetterPrinting));
                 startLetterPrinting++;
             }
         }
+
         /// <summary>
         /// This method prints the game board.
         /// </summary>
         /// <param name="i_BoardSize">the board size represented by one digit</param>
         public static void PrintBoard(int i_BoardSize, string[,] i_Board)
         {
-            
             PrintLettersOnTop(i_BoardSize);
             char startLetterPrinting = 'a';
             for (int i = 0; i < i_BoardSize; i++)
-            {   
+            {
                 printRowsSeparator(i_BoardSize);
-                PrintLetterOnSide(i_BoardSize,ref startLetterPrinting);
+                PrintLetterOnSide(i_BoardSize, ref startLetterPrinting);
                 for (int j = 0; j < i_BoardSize; j++)
                 {
                     Console.Write(string.Format("|"));
@@ -156,7 +158,7 @@ namespace C20_Ex02
                     {
                         if ((j % 2) != 0)
                         {
-                            Console.Write(string.Format("{0}", i_Board[i,j]));
+                            Console.Write(string.Format("{0}", i_Board[i, j]));
                         }
                         else
                         {
@@ -179,6 +181,7 @@ namespace C20_Ex02
                 Console.Write(string.Format("|"));
                 Console.Write(Environment.NewLine);
             }
+
             printRowsSeparator(i_BoardSize);
         }
 
@@ -201,7 +204,6 @@ namespace C20_Ex02
                 Console.WriteLine(" =========================================");
             }
         }
-
 
         public enum eBoardSize 
         {
