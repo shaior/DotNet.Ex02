@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace C20_Ex02
 {
-    class GameBoard
+    public class GameBoard
     {
         private int m_BoardSize = 0;
         private string[,] m_Board;
-        public const string k_PawnO = " O ";
-        public const string k_PawnX = " X ";
+        //public const string k_PawnO = " O ";
+        //public const string k_PawnX = " X ";
         public const string k_EmptySlot = "   ";
 
         public GameBoard(int i_BoardSize)
@@ -48,12 +48,14 @@ namespace C20_Ex02
 
         public static void InitializeBoard(int i_BoardSize , string[,] board)
         {
-            string pawnType = k_PawnO;
+            string pawnX =string.Format(" {0} ", Pawn.PawnX);
+            string pawnO = string.Format(" {0} ", Pawn.PawnO);
+            string pawnType = pawnO;
             for (int i = 0; i < i_BoardSize; i++)
             {
                 if (i == (i_BoardSize / 2) + 1)
                 {
-                    pawnType = k_PawnX;
+                    pawnType = pawnX;
                 }
                 else if (i == (i_BoardSize / 2) - 1 || i == (i_BoardSize / 2))
                 {
@@ -140,7 +142,7 @@ namespace C20_Ex02
         /// <param name="i_BoardSize">the board size represented by one digit</param>
         public static void PrintBoard(int i_BoardSize, string[,] i_Board)
         {
-            string pawnType = k_PawnO;
+            
             PrintLettersOnTop(i_BoardSize);
             char startLetterPrinting = 'a';
             for (int i = 0; i < i_BoardSize; i++)
