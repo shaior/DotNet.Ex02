@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace C20_Ex02
+﻿namespace C20_Ex02
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     public class Pawn
     {
-        private string m_PlayerPawnType;
         private static readonly string r_PawnO = ((char)ePawns.O).ToString();
         private static readonly string r_PawnX = ((char)ePawns.X).ToString();
         private static readonly string r_KingO = ((char)ePawns.KingO).ToString();
         private static readonly string r_KingX = ((char)ePawns.KingX).ToString();
-
+        private string m_PlayerPawnType;
 
         public Pawn(string i_PlayerPawn)
         {
-
             this.m_PlayerPawnType = i_PlayerPawn;
         }
+
         public string PawnType
         {
             get
@@ -27,6 +26,7 @@ namespace C20_Ex02
                 return m_PlayerPawnType;
             }
         }
+
         public static string PawnX
         {
             get
@@ -34,6 +34,7 @@ namespace C20_Ex02
                 return r_PawnX;
             }
         }
+
         public static string PawnO
         {
             get
@@ -41,6 +42,7 @@ namespace C20_Ex02
                 return r_PawnO;
             }
         }
+
         public static string KingX
         {
             get
@@ -48,6 +50,7 @@ namespace C20_Ex02
                 return r_KingX;
             }
         }
+
         public static string KingO
         {
             get
@@ -56,9 +59,13 @@ namespace C20_Ex02
             }
         }
 
-
-
-        public static bool CheckKingOpportunity(GameBoard i_Board , Player i_Player)
+        /// <summary>
+        /// Checks king oppotuirnity
+        /// </summary>
+        /// <param name="i_Board"></param>
+        /// <param name="i_Player"></param>
+        /// <returns> bool true if yes or false if not.</returns>
+        public static bool CheckKingOpportunity(GameBoard i_Board, Player i_Player)
         {
             int size6LastRow = ((int)GameBoard.eBoardSize.SixBySix) - 1;
             int size8LastRow = ((int)GameBoard.eBoardSize.EightByEight) - 1;
@@ -78,7 +85,7 @@ namespace C20_Ex02
                     BecomeKing = true;
                 }
             }
-            else if(i_Player.PawnType == Pawn.r_PawnX && playerDestinationRowIndex == firstRow)
+            else if (i_Player.PawnType == Pawn.r_PawnX && playerDestinationRowIndex == firstRow)
             {
                 BecomeKing = true;
             }
@@ -93,6 +100,5 @@ namespace C20_Ex02
             X = 'X',
             O = 'O',
         }
-
     }
 }

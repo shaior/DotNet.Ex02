@@ -1,5 +1,4 @@
-﻿
-namespace C20_Ex02
+﻿namespace C20_Ex02
 {
     using System;
     using System.Collections.Generic;
@@ -16,9 +15,7 @@ namespace C20_Ex02
         private int[] m_PlayerMove;
         private int m_PlayerScore = 0;
         private string m_PawnType;
-        private string m_PlayerLastPawnState;
         
-
         public Player(string i_PlayerName , string i_pawnType)
         {
             this.m_PlayerName = i_PlayerName;
@@ -78,26 +75,5 @@ namespace C20_Ex02
                 m_PlayerMove = value;
             }
         }
-
-        public string PlayerPawnState
-        {
-            get
-            {
-                return m_PlayerLastPawnState;
-            }
-            set
-            {
-                m_PlayerLastPawnState = value;
-            }
-        }
-
-
-
-        /*  public enum ePawnType
-          {
-              O = 0,
-              X,
-              Unassigned,
-          }*/
     }
 }
