@@ -16,6 +16,9 @@
         private string m_PawnType;
         private string m_CapturedPawn;
         private bool m_IsAbleToCapture = false;
+        private int m_KingsCount = 0;
+        private bool m_IsKing = false;
+
 
         public Player(string i_PlayerName , string i_pawnType)
         {
@@ -107,5 +110,31 @@
                 m_IsAbleToCapture = value;
             }
         }
+        public int KingsCount
+        {
+            get
+            {
+                return m_KingsCount;
+            }
+
+            set
+            {
+                m_KingsCount = value;
+            }
+        }
+        public bool IsKing
+        {
+            get
+            {
+                return m_IsKing;
+            }
+
+            set
+            {
+                m_IsKing = value;
+            }
+        }
     }
+ 
 }
+
