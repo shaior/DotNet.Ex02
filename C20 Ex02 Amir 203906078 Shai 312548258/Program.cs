@@ -560,6 +560,7 @@ namespace C20_Ex02
             return opponent;
         }
 
+
         /// <summary>
         /// play turn.
         /// </summary>
