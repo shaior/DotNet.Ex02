@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace C20_Ex02
 {
@@ -45,8 +46,8 @@ namespace C20_Ex02
             {
                 string vsFriendOrVsComputer = string.Format(
                     "Are you going to play against a friend, or against the computer?" + Environment.NewLine +
-                    "against a friend - type 1" + Environment.NewLine +
-                    "against the computer - type 0" + Environment.NewLine);
+                    "Against a friend - type 1" + Environment.NewLine +
+                    "Against 'CheckersMaster' (Computer) - type 0" + Environment.NewLine);
                 Console.WriteLine(vsFriendOrVsComputer);
 
                 resultGamePartner = Console.ReadLine();
@@ -110,6 +111,39 @@ namespace C20_Ex02
             return userName;
         }
 
+        public static string GetComputerMoves2(GameBoard i_Board)
+        {
+            GameBoard.getBoardEmptyCells(i_Board);
+            string computerMove = string.Empty;
+            Random rnd = new Random();
+
+            
+            
+            bool keepCheckForComputerMove = true;
+            while (keepCheckForComputerMove)
+            {
+                int firstLetter = rnd.Next(0, i_Board.BoardSize - 1);
+                int secondLetter = rnd.Next(0, i_Board.BoardSize - 1);
+                int thirdLetter = rnd.Next(0, i_Board.BoardSize - 1);
+                int fourthLetter = rnd.Next(0, i_Board.BoardSize - 1);
+                if (i_Board.BoardEmptyCells[thirdLetter, fourthLetter] == 1
+                    && i_Board.BoardEmptyCells[firstLetter,secondLetter] == 0
+                    && Math.Abs(firstLetter - thirdLetter) == 1 && Math.Abs(secondLetter - fourthLetter) == 1 )
+                {
+                    computerMove = string.Format("{0}{1}>{2}{3}", (char)(firstLetter + 65), (char)(secondLetter + 97), (char)(thirdLetter + 65), (char)(fourthLetter + 97));
+                    keepCheckForComputerMove = false;
+                }
+                else
+                {
+                    Console.WriteLine("check again");
+                    continue;
+                    
+                }
+            }
+
+            return computerMove;
+        }
+
         /// <summary>
         /// generate computer moves.
         /// </summary>
@@ -130,7 +164,7 @@ namespace C20_Ex02
             {
                 i_stoppingLetter = 'J';
             }
-
+            
             string computerMove = string.Empty;
             Random rnd = new Random();
             char firstLetter = (char)rnd.Next('A', i_stoppingLetter);
@@ -251,80 +285,206 @@ namespace C20_Ex02
         /// <param name="i_Board">board.</param>
         /// <param name="i_Player">player.</param>
         /// <returns> true if player move is ok.</returns>
-        public static bool CheckPlayerMove(int[] i_PlayerMove, GameBoard i_Board, Player i_Player)
+        public static bool CheckPlayerMove(GameBoard i_Board, Player i_Player)
         {
             bool isMoveOk = false;
-            bool forwardMoveIndicator = i_PlayerMove[1] == i_PlayerMove[3];
-            bool sideMoveIndicator = i_PlayerMove[0] == i_PlayerMove[2];
-            int diagonalMove = i_PlayerMove[0] - i_PlayerMove[2];
-            int diagonalAndSideMove = Math.Abs(i_PlayerMove[1] - i_PlayerMove[3]);
-            string emptySlot = "   ";
-            bool isKing = CheckIfCurrentPawnIsKing(i_PlayerMove, i_Board);
-            bool isMovingOtherPlayerPawn = (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]]).Trim() != i_Player.PawnType;
+            bool forwardMoveIndicator = i_Player.PlayerMove[1] == i_Player.PlayerMove[3];
+            bool sideMoveIndicator = i_Player.PlayerMove[0] == i_Player.PlayerMove[2];
+            int diagonalMove = i_Player.PlayerMove[0] - i_Player.PlayerMove[2];
+            int diagonalAndSideMove = Math.Abs(i_Player.PlayerMove[1] - i_Player.PlayerMove[3]);
+            bool isKing = CheckIfCurrentPawnIsKing(i_Player.PlayerMove, i_Board);
+            if (isKing)
+            {
+                i_Player.IsKing = true;
+            }
+            bool isMovingOtherPlayerPawn = (i_Board.Board[i_Player.PlayerMove[0], i_Player.PlayerMove[1]]).Trim() != i_Player.PawnType;
+            bool isDestinationSlotEmpty = i_Board.Board[i_Player.PlayerMove[2], i_Player.PlayerMove[3]] == GameBoard.k_EmptySlot;
             if (!isMoveOk)
             {
                 if (isMovingOtherPlayerPawn)
                 {
-                    if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]].Trim() == Pawn.KingO &&
-                        i_Player.PawnType == Pawn.PawnO)
+                    if (i_Board.Board[i_Player.PlayerMove[0], i_Player.PlayerMove[1]].Trim() == Pawn.KingO &&
+                        i_Player.PawnType == Pawn.PawnO && diagonalAndSideMove == 1 && isDestinationSlotEmpty) 
                     {
                         isMoveOk = true;
                     }
-                    else if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]].Trim() == Pawn.KingX &&
-                             i_Player.PawnType == Pawn.PawnX)
+                    else if (i_Board.Board[i_Player.PlayerMove[0], i_Player.PlayerMove[1]].Trim() == Pawn.KingX &&
+                             i_Player.PawnType == Pawn.PawnX && diagonalAndSideMove == 1 && isDestinationSlotEmpty)
                     {
                         isMoveOk = true;
                     }
                     else
                     {
-                        isMoveOk = false;
-                        Console.WriteLine("You can't move the opponent's pawn, try again!" + Environment.NewLine);
+                        if (i_Player.PlayerName == Player.r_ComputerName)
+                        {
+                            isMoveOk = false;
+                        }
+                        else
+                        {
+                            isMoveOk = false;
+                            Console.WriteLine("You can't move the opponent's pawn, try again!" + Environment.NewLine);
+                        }
+                        
                     }
                 }
-                bool isAbleToCapture = CheckCapturePossibility(i_PlayerMove, i_Board, i_Player);
-                if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
+                bool isAbleToCapture = CheckCapturePossibility(i_Board, i_Player);
+                if (i_Board.Board[i_Player.PlayerMove[0], i_Player.PlayerMove[1]] == GameBoard.k_EmptySlot)
                 {
-                    isMoveOk = false;
-                    Console.WriteLine("You can't make an empty move, try again!" + Environment.NewLine);
+                    if (i_Player.PlayerName == Player.r_ComputerName)
+                    {
+                        isMoveOk = false;
+                    }
+                    else
+                    {
+                        isMoveOk = false;
+                        Console.WriteLine("You can't make an empty move, try again!" + Environment.NewLine);
+                    }
+                    
                 }
                 else if (forwardMoveIndicator)
                 {
-                    isMoveOk = false;
-                    Console.WriteLine("You can't make forward or backward moves, try again! " + Environment.NewLine);
+                    if (i_Player.PlayerName == Player.r_ComputerName)
+                    {
+                        isMoveOk = false;
+                    }
+                    else
+                    {
+                        isMoveOk = false;
+                        Console.WriteLine("You can't make forward or backward moves, try again! " + Environment.NewLine);
+                    }
+                    
                 }
                 else if (sideMoveIndicator)
                 {
-                    isMoveOk = false;
-                    Console.WriteLine("You can't make side moves, try again! " + Environment.NewLine);
+                    if (i_Player.PlayerName == Player.r_ComputerName)
+                    {
+                        isMoveOk = false;
+                    }
+                    else
+                    {
+                        isMoveOk = false;
+                        Console.WriteLine("You can't make side moves, try again! " + Environment.NewLine);
+                    }
+                    
                 }
-                else if (i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] != emptySlot)
+                else if (!isDestinationSlotEmpty)
                 {
-                    isMoveOk = false;
-                    Console.WriteLine("This slot is taken, try again! " + Environment.NewLine);
+                    if (i_Player.PlayerName == Player.r_ComputerName)
+                    {
+                        isMoveOk = false;
+                    }
+                    else
+                    {
+                        isMoveOk = false;
+                        Console.WriteLine("This slot is taken, try again! " + Environment.NewLine);
+                    }
+                   
                 }
-                else if (diagonalAndSideMove == 2 && diagonalMove != 2 && !isMovingOtherPlayerPawn && !isAbleToCapture)
+                else if (diagonalAndSideMove > 1 && diagonalMove != 2 && !isMovingOtherPlayerPawn && !isAbleToCapture)
                 {
-                    isMoveOk = false;
-                    Console.WriteLine("Move is illegal!, try again! " + Environment.NewLine);
+                    if (i_Player.PlayerName == Player.r_ComputerName)
+                    {
+                        isMoveOk = false;
+                    }
+                    else
+                    {
+                        isMoveOk = false;
+                        Console.WriteLine("Move is illegal!, try again! " + Environment.NewLine);
+                    }
+                    
                 }
-                else if (isKing && diagonalMove == 1 || isKing && diagonalMove == -1 || isAbleToCapture)
+                else if ((isKing && diagonalMove == 1) && diagonalAndSideMove == 1 
+                         || (isKing && diagonalMove == -1) && diagonalAndSideMove == 1 
+                           || isAbleToCapture && diagonalAndSideMove == 1)
                 {
                     isMoveOk = true;
                 }
-                else if ((diagonalMove == 1 && i_Player.PawnType == Pawn.PawnX) ||
-                         (diagonalMove == -1 && i_Player.PawnType == Pawn.PawnO) || isAbleToCapture)
+                else if ((diagonalMove == 1 && i_Player.PawnType == Pawn.PawnX) && !isMovingOtherPlayerPawn ||
+                         (diagonalMove == -1 && i_Player.PawnType == Pawn.PawnO) && !isMovingOtherPlayerPawn || isAbleToCapture && !isMovingOtherPlayerPawn)
                 {
                     isMoveOk = true;
                 }
                 else
                 {
-                    isMoveOk = false;
-                    Console.WriteLine("Move is illegal!, try again! " + Environment.NewLine);
+                    if (i_Player.PlayerName == Player.r_ComputerName)
+                    {
+                        isMoveOk = false;
+                    }
+                    else
+                    {
+                        isMoveOk = false;
+                        Console.WriteLine("Move is illegal!, try again! " + Environment.NewLine);
+                    }
+                    
                 }
             }
 
             return isMoveOk;
         }
+
+    
+
+        /// <summary>
+        /// checks the computer moves.
+        /// </summary>
+        /// <param name="i_PlayerMove">array of moves.</param>
+        /// <param name="i_Board">board.</param>
+        /// <param name="i_Player">player.</param>
+        /// <returns>bool if moves are ok.</returns>
+        //public static bool CheckComputerMove(int[] i_PlayerMove, GameBoard i_Board, Player i_Player)
+        //{
+        //    bool isMoveOk = false;
+            
+        //    bool forwardMoveIndicator = i_PlayerMove[1] == i_PlayerMove[3];
+        //    bool sideMoveIndicator = i_PlayerMove[0] == i_PlayerMove[2];
+        //    int diagonalMove = Math.Abs(i_PlayerMove[0] - i_PlayerMove[2]);
+           
+        //    int diagonalAndSideMove = Math.Abs(i_PlayerMove[1] - i_PlayerMove[3]);
+        //    string emptySlot = "   ";
+        //    bool isDestinationSlotEmpty = i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] == emptySlot;
+        //    bool isMovingOtherPlayerPawn = (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]]).Trim() != i_Player.PawnType;
+        //    if (!isMoveOk)
+        //    {
+        //        if (isMovingOtherPlayerPawn)
+        //        {
+        //            isMoveOk = false;
+        //        }
+        //        else
+        //        {
+        //            bool isAbleToCapture = CheckCapturePossibility(i_Board, i_Player);
+
+        //            // TODO check how to implement random eating.
+
+        //            if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
+        //            {
+        //                isMoveOk = false;
+        //            }
+        //            else if (forwardMoveIndicator)
+        //            {
+        //                isMoveOk = false;
+        //            }
+        //            else if (sideMoveIndicator)
+        //            {
+        //                isMoveOk = false;
+        //            }
+        //            else if (!isDestinationSlotEmpty)
+        //            {
+        //                isMoveOk = false;
+        //            }
+        //            else if (diagonalAndSideMove == 2 && diagonalMove != 2 && !isMovingOtherPlayerPawn && !isAbleToCapture)
+        //            {
+        //                isMoveOk = false;
+        //            }
+        //            else if (diagonalMove == 1 && diagonalAndSideMove == 1 || isAbleToCapture && diagonalAndSideMove == 2 && diagonalMove == 2 && isDestinationSlotEmpty)
+        //            {
+                        
+        //                isMoveOk = true;
+        //            }
+        //        }
+        //    }
+
+        //    return isMoveOk;
+        //}
 
         /// <summary>
         /// check if pawn is king.
@@ -332,7 +492,7 @@ namespace C20_Ex02
         /// <param name="i_playerMove"> array of player moves.</param>
         /// <param name="i_Board">board.</param>
         /// <returns>bool if current pawn is king.</returns>
-        public static bool CheckIfCurrentPawnIsKing(int[] i_playerMove , GameBoard i_Board)
+        public static bool CheckIfCurrentPawnIsKing(int[] i_playerMove, GameBoard i_Board)
         {
             bool isKing = false;
             string startingIndexPawnType = i_Board.Board[i_playerMove[0], i_playerMove[1]];
@@ -345,132 +505,70 @@ namespace C20_Ex02
         }
 
         /// <summary>
-        /// checks the computer moves.
-        /// </summary>
-        /// <param name="i_PlayerMove">array of moves.</param>
-        /// <param name="i_Board">board.</param>
-        /// <param name="i_Player">player.</param>
-        /// <returns>bool if moves are ok.</returns>
-        public static bool CheckComputerMove(int[] i_PlayerMove, GameBoard i_Board, Player i_Player)
-        {
-            bool isMoveOk = false;
-            
-            bool forwardMoveIndicator = i_PlayerMove[1] == i_PlayerMove[3];
-            bool sideMoveIndicator = i_PlayerMove[0] == i_PlayerMove[2];
-            int diagonalMove = Math.Abs(i_PlayerMove[0] - i_PlayerMove[2]);
-           
-            int diagonalAndSideMove = Math.Abs(i_PlayerMove[1] - i_PlayerMove[3]);
-            string emptySlot = "   ";
-            bool isDestinationSlotEmpty = i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] == emptySlot;
-            bool isMovingOtherPlayerPawn = (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]]).Trim() != i_Player.PawnType;
-            if (!isMoveOk)
-            {
-                if (isMovingOtherPlayerPawn)
-                {
-                    isMoveOk = false;
-                }
-                else
-                {
-                    bool isAbleToCapture = CheckCapturePossibility(i_PlayerMove, i_Board, i_Player);
-
-                    // TODO check how to implement random eating.
-
-                    if (i_Board.Board[i_PlayerMove[0], i_PlayerMove[1]] == emptySlot)
-                    {
-                        isMoveOk = false;
-                    }
-                    else if (forwardMoveIndicator)
-                    {
-                        isMoveOk = false;
-                    }
-                    else if (sideMoveIndicator)
-                    {
-                        isMoveOk = false;
-                    }
-                    else if (!isDestinationSlotEmpty)
-                    {
-                        isMoveOk = false;
-                    }
-                    else if (diagonalAndSideMove == 2 && diagonalMove != 2 && !isMovingOtherPlayerPawn && !isAbleToCapture)
-                    {
-                        isMoveOk = false;
-                    }
-                    else if (diagonalMove == 1 && diagonalAndSideMove == 1 || isAbleToCapture && diagonalAndSideMove == 2 && diagonalMove == 2 && isDestinationSlotEmpty)
-                    {
-
-                        isMoveOk = true;
-                    }
-                }
-            }
-
-            return isMoveOk;
-        }
-         
-        /// <summary>
         /// checks the capture possiblity.
         /// </summary>
         /// <param name="i_PlayerMove">array of moves.</param>
         /// <param name="i_Board">board.</param>
         /// <param name="i_Player">layer.</param>
         /// <returns>bool true if capture is true. </returns>
-        public static bool CheckCapturePossibility(int[] i_PlayerMove, GameBoard i_Board, Player i_Player)
+        public static bool CheckCapturePossibility(GameBoard i_Board, Player i_Player)
         {
             string pawnO = Pawn.PawnO;
             string pawnX = Pawn.PawnX;
             bool checkIfAbleToCapture = false;
             int firstIndexOfDiagonal = 0;
             int secondIndexOfDiagonal = 0;
-            bool leftDirectionForward = (i_PlayerMove[0] - i_PlayerMove[2] == 2) && (i_PlayerMove[1] - i_PlayerMove[3] == 2);
-            bool rightDirectionForward = (i_PlayerMove[0] - i_PlayerMove[2] == 2) && (i_PlayerMove[3] - i_PlayerMove[1] == 2);
-            bool leftDirectionDown = (i_PlayerMove[2] - i_PlayerMove[0] == 2) && (i_PlayerMove[1] - i_PlayerMove[3] == 2);
-            bool rightDirectionDown = (i_PlayerMove[2] - i_PlayerMove[0] == 2) && (i_PlayerMove[3] - i_PlayerMove[1] == 2);
+            bool leftDirectionForward = (i_Player.PlayerMove[0] - i_Player.PlayerMove[2] == 2) && (i_Player.PlayerMove[1] - i_Player.PlayerMove[3] == 2);
+            bool rightDirectionForward = (i_Player.PlayerMove[0] - i_Player.PlayerMove[2] == 2) && (i_Player.PlayerMove[3] - i_Player.PlayerMove[1] == 2);
+            bool leftDirectionDown = (i_Player.PlayerMove[2] - i_Player.PlayerMove[0] == 2) && (i_Player.PlayerMove[1] - i_Player.PlayerMove[3] == 2);
+            bool rightDirectionDown = (i_Player.PlayerMove[2] - i_Player.PlayerMove[0] == 2) && (i_Player.PlayerMove[3] - i_Player.PlayerMove[1] == 2);
             //bool eatingRight = i_PlayerMove[1] < i_PlayerMove[3] == true;
             //bool eatingLeft = i_PlayerMove[1] > i_PlayerMove[3] == true;
 
             if (i_Player.PawnType == pawnX && leftDirectionForward)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] - 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] - 1);
             }
-            else if(i_Player.PawnType == pawnX && leftDirectionDown)
+            else if(i_Player.PawnType == pawnX && leftDirectionDown && i_Player.IsKing == true)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] + 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] + 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] - 1);
             }
             else if (i_Player.PawnType == pawnX && rightDirectionForward)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] + 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] - 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] + 1);
             }
-            else if (i_Player.PawnType == pawnX && rightDirectionDown)
+            else if (i_Player.PawnType == pawnX && rightDirectionDown && i_Player.IsKing == true)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] + 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] + 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] + 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] + 1);
             }
 
             // k_pawnO
-            else if (i_Player.PawnType == pawnO && leftDirectionForward)
+            else if (i_Player.PawnType == pawnO && leftDirectionForward && i_Player.IsKing == true)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] - 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] - 1);
             }
             else if (i_Player.PawnType == pawnO && leftDirectionDown)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] + 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] - 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] + 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] - 1);
             }
-            else if (i_Player.PawnType == pawnO && rightDirectionForward)
+            else if (i_Player.PawnType == pawnO && rightDirectionForward && i_Player.IsKing == true)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] - 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] + 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] - 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] + 1);
             }
             else if (i_Player.PawnType == pawnO && rightDirectionDown)
             {
-                firstIndexOfDiagonal = Math.Abs(i_PlayerMove[0] + 1);
-                secondIndexOfDiagonal = Math.Abs(i_PlayerMove[1] + 1);
+                firstIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[0] + 1);
+                secondIndexOfDiagonal = Math.Abs(i_Player.PlayerMove[1] + 1);
             }
 
-            if (i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] ==
+            if (i_Board.Board[i_Player.PlayerMove[2], i_Player.PlayerMove[3]] ==
                 i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal])
             {
                 checkIfAbleToCapture = false;
@@ -478,7 +576,7 @@ namespace C20_Ex02
             else if (i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal] != GameBoard.k_EmptySlot &&
                      (i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal]).Trim() != i_Player.PawnType)
             {
-                if (i_Board.Board[i_PlayerMove[2], i_PlayerMove[3]] == GameBoard.k_EmptySlot)
+                if (i_Board.Board[i_Player.PlayerMove[2], i_Player.PlayerMove[3]] == GameBoard.k_EmptySlot)
                 {
                     Console.WriteLine("Able to capture!");
                     i_Player.CapturedPawn = (i_Board.Board[firstIndexOfDiagonal, secondIndexOfDiagonal]).Trim();
@@ -578,9 +676,12 @@ namespace C20_Ex02
                 bool isMoveOk = true;
                 if (i_Player.PlayerName == Player.r_ComputerName)
                 {
+                    //Console.WriteLine("CheckersMaster is Thinking...");
                     playerMoves = GetComputerMoves(i_Board.BoardSize);
+                    //playerMoves = GetComputerMoves2(i_Board);
                     i_Player.PlayerMove = ConvertInputLettersToIndexes(playerMoves);
-                    isMoveOk = CheckComputerMove(i_Player.PlayerMove, i_Board, i_Player);
+                    //isMoveOk = CheckComputerMove(i_Player.PlayerMove, i_Board, i_Player);
+                    isMoveOk = CheckPlayerMove(i_Board, i_Player);
                     // tODO VErify that if the computer is able to eat it must
                 }
                 else
@@ -592,7 +693,7 @@ namespace C20_Ex02
                         break;
                     }
                     i_Player.PlayerMove = ConvertInputLettersToIndexes(playerMoves);
-                    isMoveOk = CheckPlayerMove(i_Player.PlayerMove, i_Board, i_Player);
+                    isMoveOk = CheckPlayerMove(i_Board, i_Player);
                 }
 
                 if (!isMoveOk)
@@ -601,6 +702,7 @@ namespace C20_Ex02
                 }
                 else
                 {
+                    //Ex02.ConsoleUtils.Screen.Clear();
                     MakeMoves(i_Player.PlayerMove, ref i_Board);
 
                     //TODO check if able to eat again and then do again
@@ -633,10 +735,12 @@ namespace C20_Ex02
             if (playerPawnType == Pawn.PawnO)
             {
                 io_Board.Board[i_Player.PlayerMove[2], i_Player.PlayerMove[3]] = kingOPawn;
+                i_Player.KingsCount++;
             }
             else if (playerPawnType == Pawn.PawnX)
             {
                 io_Board.Board[i_Player.PlayerMove[2], i_Player.PlayerMove[3]] = kingXPawn;
+                i_Player.KingsCount++;
             }
         }
 
@@ -659,6 +763,41 @@ namespace C20_Ex02
             return quitGame;
         }
 
+        public static void CheckForWinner(GameBoard i_Board , Player i_Player , Player i_Opponent)
+        {
+            int numberOfPawnX = 0;
+            int numberOfPawnO = 0;
+            
+
+            for (int i = 0; i < i_Board.BoardSize; i++)
+            {
+                for (int j = 0; j < i_Board.BoardSize; j++)
+                {
+                    if (i_Board.Board[i, j].Trim() == Pawn.PawnO)
+                    {
+                        numberOfPawnO += 1;
+                    }
+                    else if (i_Board.Board[i, j].Trim() == Pawn.PawnX)
+                    {
+                        numberOfPawnX += 1;
+                    }
+                }
+
+                if (numberOfPawnO == 0)
+                {
+                    int opponentWinScore = i_Opponent.PlayerScore - i_Player.PlayerScore;
+                    Console.WriteLine(string.Format("{0} is the winner", i_Opponent.PlayerName));
+                    Console.WriteLine(string.Format("{0} score is {1}"),i_Opponent.PlayerName,opponentWinScore);
+                }
+                else if (numberOfPawnX == 0)
+                {
+                    int playerWinScore = i_Player.PlayerScore - i_Opponent.PlayerScore; 
+                    Console.WriteLine(string.Format("{0} is the winner", i_Player.PlayerName));
+                    Console.WriteLine(string.Format("{0} score is {1}"), i_Player.PlayerName, playerWinScore);
+                }
+            }
+        }
+
         /// <summary>
         /// try game.
         /// </summary>
@@ -666,17 +805,17 @@ namespace C20_Ex02
         {
             Console.WriteLine("Welcome to Checkers game!");
             // string playerMoves = string.Empty;
-            string pawnO = ((char)Pawn.ePawns.O).ToString();
-            string pawnX = ((char)Pawn.ePawns.X).ToString();
+            string pawnO = Pawn.PawnO;
+            string pawnX = Pawn.PawnX;
             bool continueGame = true;
             while (continueGame)
             {
                 Player player1 = new Player(GetPlayerName(), pawnO);
                 GameBoard board1 = new GameBoard(GetBoardSizeFromUser());
+                //board1.BoardEmptyCells = new int[board1.BoardSize, board1.BoardSize];
                 GameBoard.InitializeBoard(board1.BoardSize, board1.Board);
-                GameBoard.PrintBoard(board1.BoardSize, board1.Board);
-                //string computerName = "CheckersMaster";
                 Player opponent = ChooseOpponent(pawnX);
+                GameBoard.PrintBoard(board1.BoardSize, board1.Board);
                 bool playing = true;
                 bool player1Turn = true;
                 while (playing)
@@ -684,6 +823,7 @@ namespace C20_Ex02
                     if (player1Turn)
                     {
                         continueGame = PlayTurn(player1, board1);
+                        
                         player1Turn = false;
                         if (CheckIfUserQuitGame(continueGame,player1,opponent))
                         {
@@ -693,6 +833,7 @@ namespace C20_Ex02
                     else
                     {
                         continueGame = PlayTurn(opponent, board1);
+                        
                         player1Turn = true;
                         if (CheckIfUserQuitGame(continueGame, player1, opponent))
                         {

@@ -11,6 +11,8 @@
         public const string k_EmptySlot = "   ";
         private int m_BoardSize = 0;
         private string[,] m_Board;
+        private int[,] m_BoardEmptyCells;
+
         public GameBoard(int i_BoardSize)
         {
             this.m_BoardSize = i_BoardSize;
@@ -40,6 +42,32 @@
             set
             {
                 m_Board = value;
+            }
+        }
+        public int[,] BoardEmptyCells
+        {
+            get
+            {
+                return m_BoardEmptyCells;
+            }
+
+            set
+            {
+                m_BoardEmptyCells = value;
+            }
+        }
+
+        public static void getBoardEmptyCells(GameBoard i_Board)
+        {
+            for (int i = 0; i < i_Board.BoardSize; i++)
+            {
+                for (int j = 0; j < i_Board.BoardSize; j++)
+                {
+                    if (i_Board.Board[i, j] == GameBoard.k_EmptySlot)
+                    {
+                        i_Board.BoardEmptyCells[i, j] = 1;
+                    }
+                }
             }
         }
 
