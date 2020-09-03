@@ -378,7 +378,6 @@ namespace C20_Ex02
                         isMoveOk = false;
                         Console.WriteLine("This slot is taken, try again! " + Environment.NewLine);
                     }
-                   
                 }
                 else if (diagonalAndSideMove > 1 && diagonalMove != 2 && !isMovingOtherPlayerPawn && !isAbleToCapture)
                 {
@@ -767,8 +766,6 @@ namespace C20_Ex02
         {
             int numberOfPawnX = 0;
             int numberOfPawnO = 0;
-            
-
             for (int i = 0; i < i_Board.BoardSize; i++)
             {
                 for (int j = 0; j < i_Board.BoardSize; j++)
@@ -799,45 +796,80 @@ namespace C20_Ex02
         }
 
         /// <summary>
+        /// check if play game again.
+        /// </summary>
+        /// <param name="i_Board">board game</param>
+        /// <returns>true if answer from user is yes, else false;</returns>
+        public static bool PlayAgain(GameBoard i_Board)
+        {
+            Console.WriteLine("Would you like to play another game? Y/N");
+            string user_answer = Console.ReadLine();
+            if (user_answer.ToUpper() == "Y")
+            {
+                Ex02.ConsoleUtils.Screen.Clear();
+                Console.WriteLine("Welcome again!");
+                GameBoard.InitializeBoard(i_Board.BoardSize, i_Board.Board);
+                GameBoard.PrintBoard(i_Board.BoardSize, i_Board.Board);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// try game.
         /// </summary>
         public static void tryGame()
         {
             Console.WriteLine("Welcome to Checkers game!");
-            // string playerMoves = string.Empty;
             string pawnO = Pawn.PawnO;
             string pawnX = Pawn.PawnX;
             bool continueGame = true;
             while (continueGame)
             {
-                Player player1 = new Player(GetPlayerName(), pawnO);
-                GameBoard board1 = new GameBoard(GetBoardSizeFromUser());
-                //board1.BoardEmptyCells = new int[board1.BoardSize, board1.BoardSize];
-                GameBoard.InitializeBoard(board1.BoardSize, board1.Board);
+                Player i_Player = new Player(GetPlayerName(), pawnO);
+                GameBoard i_Board = new GameBoard(GetBoardSizeFromUser());
+                GameBoard.InitializeBoard(i_Board.BoardSize, i_Board.Board);
                 Player opponent = ChooseOpponent(pawnX);
-                GameBoard.PrintBoard(board1.BoardSize, board1.Board);
+                GameBoard.PrintBoard(i_Board.BoardSize, i_Board.Board);
                 bool playing = true;
                 bool player1Turn = true;
                 while (playing)
                 {
                     if (player1Turn)
                     {
-                        continueGame = PlayTurn(player1, board1);
-                        
+                        continueGame = PlayTurn(i_Player, i_Board);
                         player1Turn = false;
-                        if (CheckIfUserQuitGame(continueGame,player1,opponent))
+                        if (CheckIfUserQuitGame(continueGame,i_Player,opponent))
                         {
-                            break;
+                            bool user_answer = PlayAgain(i_Board);
+                            if (user_answer) 
+                            {
+                                player1Turn = true;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                     }
                     else
                     {
-                        continueGame = PlayTurn(opponent, board1);
-                        
+                        continueGame = PlayTurn(opponent, i_Board);
                         player1Turn = true;
-                        if (CheckIfUserQuitGame(continueGame, player1, opponent))
+                        if (CheckIfUserQuitGame(continueGame, i_Player, opponent))
                         {
-                            break;
+                            bool user_answer = PlayAgain(i_Board);
+                            if (user_answer)
+                            {
+                                player1Turn = true;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                     }
                 }
