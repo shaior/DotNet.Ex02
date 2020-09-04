@@ -12,6 +12,8 @@
         private int m_BoardSize = 0;
         private string[,] m_Board;
         private int[,] m_BoardEmptyCells;
+        private int m_FirstIndexOfDiagonal;
+        private int m_SecondIndexOfDiagonal;
 
         public GameBoard(int i_BoardSize)
         {
@@ -56,7 +58,30 @@
                 m_BoardEmptyCells = value;
             }
         }
+        public int FirstIndexOfDiagonal
+        {
+            get
+            {
+                return m_FirstIndexOfDiagonal;
+            }
 
+            set
+            {
+                m_FirstIndexOfDiagonal = value;
+            }
+        }
+        public int SecondIndexOfDiagonal
+        {
+            get
+            {
+                return m_SecondIndexOfDiagonal;
+            }
+
+            set
+            {
+                m_SecondIndexOfDiagonal = value;
+            }
+        }
         public static void getBoardEmptyCells(GameBoard i_Board)
         {
             for (int i = 0; i < i_Board.BoardSize; i++)

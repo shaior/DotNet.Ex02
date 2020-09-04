@@ -18,7 +18,7 @@
         private bool m_IsAbleToCapture = false;
         private int m_KingsCount = 0;
         private bool m_IsKing = false;
-
+        private bool m_IsPlayerQuit = false;
 
         public Player(string i_PlayerName , string i_pawnType)
         {
@@ -26,7 +26,6 @@
             this.m_PawnType = i_pawnType;
         }
 
-        
         public int PlayerScore
         {
             get
@@ -98,6 +97,7 @@
                 m_CapturedPawn = value;
             }
         }
+
         public bool IsAbleToCapture
         {
             get
@@ -110,6 +110,7 @@
                 m_IsAbleToCapture = value;
             }
         }
+
         public int KingsCount
         {
             get
@@ -122,6 +123,7 @@
                 m_KingsCount = value;
             }
         }
+
         public bool IsKing
         {
             get
@@ -134,7 +136,19 @@
                 m_IsKing = value;
             }
         }
+
+        public bool IsPlayerQuit
+        {
+            get
+            {
+                return m_IsPlayerQuit;
+            }
+
+            set
+            {
+                m_IsPlayerQuit = value;
+            }
+        }
     }
- 
 }
 
